@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "packagerOpts": {
-      "sourceExts": ["js", "json", "ts", "tsx", "svg"]
-    },
+
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
