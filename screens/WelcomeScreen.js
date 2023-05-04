@@ -9,7 +9,7 @@ import {
 //import assets
 import IconMap from "../assets/images/iconMap.png";
 
-export default function HomeScreen() {
+export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.homeContainer}>
       <Image source={IconMap} style={styles.logo} />
@@ -17,19 +17,23 @@ export default function HomeScreen() {
       <Text style={styles.baseline}>Spot the best places in town</Text>
 
       <TouchableHighlight
-        style={styles.buttonIn}
-        onPress={() => {}}
-        underlayColor="#42855B"
-      >
-        <Text style={styles.buttonSignIn}>Sign In</Text>
-      </TouchableHighlight>
-
-      <TouchableHighlight
         style={styles.buttonUp}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate("SignUp");
+        }}
         underlayColor="#CFFF8D"
       >
         <Text style={styles.buttonSignUp}>Sign Up</Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight
+        style={styles.buttonIn}
+        onPress={() => {
+          navigation.navigate("SignIn");
+        }}
+        underlayColor="#42855B"
+      >
+        <Text style={styles.buttonSignIn}>Sign In</Text>
       </TouchableHighlight>
     </View>
   );
@@ -64,8 +68,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   buttonIn: {
-    marginTop: 50,
-    margin: "5%",
     backgroundColor: "#749F82",
     height: 45,
     width: "70%",
@@ -79,6 +81,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   buttonUp: {
+    marginTop: 50,
+    margin: 20,
     backgroundColor: "#A8E890",
     height: 45,
     width: "70%",
