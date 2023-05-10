@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  TextInput,
-} from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 
 export default function InputStyle({
   placeholder,

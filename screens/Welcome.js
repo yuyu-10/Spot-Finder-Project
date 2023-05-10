@@ -9,7 +9,7 @@ import {
 //import assets
 import IconMap from "../assets/images/iconMap.png";
 
-export default function WelcomeScreen({ navigation }) {
+export default function Welcome({ navigation }) {
   return (
     <View style={styles.homeContainer}>
       <Image source={IconMap} style={styles.logo} />
