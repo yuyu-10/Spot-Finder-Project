@@ -69,14 +69,14 @@ export default function SignIn({ navigation, session }) {
         />
 
         <TouchableHighlight
-          style={styles.signUp}
+          style={styles.signIn}
           underlayColor="#425F57"
           disabled={loading}
           onPress={() => {
             signInWithEmail();
           }}
         >
-          <Text style={styles.buttonSignUp}>Sign In</Text>
+          <Text style={styles.buttonSignIn}>Sign In</Text>
         </TouchableHighlight>
         <TouchableOpacity
           onPress={() => {
@@ -109,12 +109,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  buttonSignUp: {
-    color: "#749F82",
+  buttonSignIn: {
+    color: "#425F57",
     fontWeight: "bold",
     fontSize: 20,
   },
-  signUp: {
+  signIn: {
     backgroundColor: "#CFFF8D",
     marginBottom: 20,
     width: "80%",
@@ -187,15 +187,15 @@ const styles = StyleSheet.create({
 //         >
 //           <Text style={styles.buttonSignIn}>Sign In</Text>
 //         </TouchableHighlight>
-        // <TouchableOpacity
-        //   onPress={() => {
-        //     navigation.navigate("SignUp");
-        //   }}
-        // >
-        //   <Text style={styles.buttonAccount}>
-        //     Don't Have an account yet? Click here
-        //   </Text>
-        // </TouchableOpacity>
+// <TouchableOpacity
+//   onPress={() => {
+//     navigation.navigate("SignUp");
+//   }}
+// >
+//   <Text style={styles.buttonAccount}>
+//     Don't Have an account yet? Click here
+//   </Text>
+// </TouchableOpacity>
 //       </View>
 //     </KeyboardAwareScrollView>
 //   );

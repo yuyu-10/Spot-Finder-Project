@@ -5,10 +5,10 @@ import {
   TouchableHighlight,
   Image,
 } from "react-native";
-import GoogleAuth from "./GoogleAuth";
-import { supabase } from "../lib/supabase";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+// import GoogleAuth from "./GoogleAuth";
+// import { supabase } from "../lib/supabase";
+// import { Auth } from "@supabase/auth-ui-react";
+// import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 //import assets
 import IconMap from "../assets/images/iconMap.png";
@@ -39,21 +39,6 @@ export default function Welcome({ navigation }) {
       >
         <Text style={styles.buttonSignIn}>Sign In</Text>
       </TouchableHighlight>
-
-      <Auth
-        supabaseClient={supabase}
-        appearance={{ theme: ThemeSupa }}
-        providers={["google"]}
-      />
-
-      {/* <TouchableHighlight
-        style={styles.googleButton}
-        onPress={
-          GoogleAuth
-        }
-      >
-        <Text>Sign in With Google</Text>
-      </TouchableHighlight> */}
     </View>
   );
 }
@@ -82,7 +67,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   buttonSignIn: {
-    color: "#A8E890",
+    color: "#425F57",
     fontWeight: "bold",
     fontSize: 15,
   },
@@ -95,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonSignUp: {
-    color: "#749F82",
+    color: "#425F57",
     fontWeight: "bold",
     fontSize: 15,
   },

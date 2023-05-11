@@ -5,11 +5,12 @@ export default function InputStyle({
   value,
   setter,
   secureTextEntry,
+  disabled,
 }) {
   return (
     <TextInput
       placeholder={placeholder}
-      style={styles.inputStyle}
+      style={[styles.inputStyle, disabled ? styles.disableInput : null]}
       placeholderTextColor="#425F57"
       value={value}
       secureTextEntry={secureTextEntry}
@@ -17,6 +18,7 @@ export default function InputStyle({
       onChangeText={(text) => {
         setter(text);
       }}
+      editable={!disabled}
     />
   );
 }
@@ -29,8 +31,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#749F82",
+    backgroundColor: "#2E3E39",
     paddingHorizontal: 20,
     color: "white",
+  },
+  disableInput: {
+    backgroundColor: "#2E3E39",
+    color: "#749F82",
   },
 });

@@ -5,7 +5,7 @@ import {
   View,
   TouchableHighlight,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { supabase } from "../lib/supabase";
@@ -21,20 +21,20 @@ export default function SignUp({ navigation }) {
 
   async function signUpWithEmail() {
     if (email && password) {
-      if (password === confirmPassword){
+      if (password === confirmPassword) {
         setLoading(true);
 
-      const { error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-      });
-      navigation.navigate("SignIn");
+        const { error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+        });
+        navigation.navigate("SignIn");
 
-      if (error) Alert.alert(error.message);
-      setLoading(false);
+        if (error) Alert.alert(error.message);
+        setLoading(false);
       } else {
-        Alert.alert("Password and confirm password do not match")
-      }     
+        Alert.alert("Password and confirm password do not match");
+      }
     } else {
       Alert.alert("All fields are required");
       setLoading(false);
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonSignUp: {
-    color: "#749F82",
+    color: "#425F57",
     fontWeight: "bold",
     fontSize: 20,
   },
