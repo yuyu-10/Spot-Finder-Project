@@ -13,6 +13,8 @@
     "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
+    "@supabase/auth-ui-react": "^0.4.2",
+    "@supabase/auth-ui-shared": "^0.1.6",
     "@supabase/supabase-js": "^2.21.0",
     "expo": "~48.0.15",
     "expo-auth-session": "^4.0.3",
