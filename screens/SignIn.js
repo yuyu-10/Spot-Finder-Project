@@ -78,13 +78,16 @@ export default function SignIn({ navigation, session }) {
         >
           <Text style={styles.buttonSignUp}>Sign In</Text>
         </TouchableHighlight>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SignUp");
+          }}
+        >
+          <Text style={styles.buttonAccount}>
+            Don't Have an account yet? Click here
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      {/* <View>
-        {session && session.user ? (
-          <Account key={session.user.id} session={session} />
-        ) : null}
-      </View> */}
     </KeyboardAwareScrollView>
   );
 }
@@ -184,15 +187,15 @@ const styles = StyleSheet.create({
 //         >
 //           <Text style={styles.buttonSignIn}>Sign In</Text>
 //         </TouchableHighlight>
-//         <TouchableOpacity
-//           onPress={() => {
-//             navigation.navigate("SignUp");
-//           }}
-//         >
-//           <Text style={styles.buttonAccount}>
-//             Don't Have an account yet? Click here
-//           </Text>
-//         </TouchableOpacity>
+        // <TouchableOpacity
+        //   onPress={() => {
+        //     navigation.navigate("SignUp");
+        //   }}
+        // >
+        //   <Text style={styles.buttonAccount}>
+        //     Don't Have an account yet? Click here
+        //   </Text>
+        // </TouchableOpacity>
 //       </View>
 //     </KeyboardAwareScrollView>
 //   );
