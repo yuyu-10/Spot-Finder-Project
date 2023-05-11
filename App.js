@@ -3,10 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
-// import Auth from "./screens/SignUp";
-// import Account from "./screens/Account";
-// import { View } from "react-native";
-// import { Session } from "@supabase/supabase-js";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,13 +33,6 @@ export default function App() {
 
   return (
     <>
-      {/* <View>
-        {session && session.user ? (
-          <Account key={session.user.id} session={session} />
-        ) : (
-          <Auth />
-        )}
-      </View> */}
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Welcome"
@@ -61,14 +50,14 @@ export default function App() {
             component={Welcome}
             options={{ headerShown: false }}
           />
-          {/* <Stack.Screen name="SignUp" component={SignUp} session={session} /> */}
+
           <Stack.Screen name="SignUp">
             {(props) => <SignUp {...props} session={session} />}
           </Stack.Screen>
           <Stack.Screen name="SignIn">
             {(props) => <SignIn {...props} session={session} />}
           </Stack.Screen>
-          {/* <Stack.Screen name="SignIn" component={SignIn} session={session} /> */}
+
           <Stack.Screen name="Account" component={Account} />
         </Stack.Navigator>
       </NavigationContainer>

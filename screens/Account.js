@@ -20,7 +20,7 @@ export default function Account({ route, navigation }) {
     }
   }
 
-  console.log("session", supabase.auth.signOut());
+  //   console.log("session", session);
 
   useEffect(() => {
     if (session) getProfile();
@@ -59,7 +59,7 @@ export default function Account({ route, navigation }) {
       if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
-        id: session?.user.id,
+        id: id,
         first_name: firstName,
         last_name: lastName,
         updated_at: new Date(),
