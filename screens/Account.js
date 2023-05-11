@@ -7,13 +7,11 @@ import {
   TouchableHighlight,
   Text,
 } from "react-native";
-import { Button, Input } from "react-native-elements";
-import { Session } from "@supabase/supabase-js";
 
 import InputStyle from "../components/InputStyle";
 
-export default function Account({ route, navigation }) {
-  const { session, id } = route.params;
+export default function Account({ navigation, session }) {
+  // const { session, id } = route.params;
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -27,8 +25,6 @@ export default function Account({ route, navigation }) {
       Alert.alert(error.message);
     }
   }
-
-  //   console.log("session", session);
 
   useEffect(() => {
     if (session) getProfile();
@@ -67,7 +63,7 @@ export default function Account({ route, navigation }) {
       if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
-        id: id,
+        id: session.user.id,
         first_name: firstName,
         last_name: lastName,
         updated_at: new Date(),

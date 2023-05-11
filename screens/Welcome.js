@@ -39,6 +39,15 @@ export default function Welcome({ navigation }) {
       >
         <Text style={styles.buttonSignIn}>Sign In</Text>
       </TouchableHighlight>
+      {/* <TouchableHighlight
+        style={styles.buttonIn}
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+        underlayColor="#42855B"
+      >
+        <Text style={styles.buttonSignIn}>Home</Text>
+      </TouchableHighlight> */}
     </View>
   );
 }
