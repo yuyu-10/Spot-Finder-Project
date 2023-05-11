@@ -9,28 +9,19 @@ import {
 } from "react-native";
 import MapView from "react-native-maps";
 
-export default function Home({ navigation }) {
-  async function handleSignOut() {
-    try {
-      await supabase.auth.signOut();
-      navigation.navigate("Welcome");
-    } catch (error) {
-      Alert.alert(error.message);
-    }
-  }
+export default function Home({ profile }) {
   return (
     <>
       <View style={styles.container}>
-        <MapView style={styles.map} />
+        {profile && (
+          <>
+            <Text>
+              Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
+            </Text>
+            <MapView style={styles.map} />
+          </>
+        )}
       </View>
-
-      <TouchableHighlight
-        style={styles.signOut}
-        underlayColor="#425F57"
-        onPress={handleSignOut}
-      >
-        <Text style={styles.buttonSignOut}>Sign Out</Text>
-      </TouchableHighlight>
     </>
   );
 }

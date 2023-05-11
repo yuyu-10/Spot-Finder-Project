@@ -21,6 +21,7 @@ import Discover from "./screens/Discover";
 
 export default function App() {
   const [session, setSession] = useState(null);
+  const [profile, setProfile] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -38,7 +39,26 @@ export default function App() {
     };
   }, []);
 
-  console.log(session);
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        if (session && session.user) {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id);
+          if (error) {
+            throw new Error(error.message);
+          }
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+    fetchProfileData();
+  }, [session]);
+
   return (
     <NavigationContainer>
       {session === null ? (
@@ -64,7 +84,7 @@ export default function App() {
           <Stack.Screen name="SignIn">
             {(props) => <SignIn {...props} session={session} />}
           </Stack.Screen>
-          <Stack.Screen name="Account" component={Account} />
+          <Stack.Screen name="Profil" component={Account} />
         </Stack.Navigator>
       ) : (
         <Tab.Navigator
@@ -74,11 +94,11 @@ export default function App() {
               let iconName;
 
               if (route.name === "Map") {
-                iconName = focused
-                  ? "ios-information-circle"
-                  : "ios-information-circle-outline";
+                iconName = focused ? "map" : "map-outline";
               } else if (route.name === "Discover") {
-                iconName = focused ? "ios-list" : "ios-list-outline";
+                iconName = focused ? "search" : "search-outline";
+              } else if (route.name === "Profil") {
+                iconName = focused ? "person" : "person-outline";
               }
 
               // You can return any component that you like here!
@@ -92,7 +112,10 @@ export default function App() {
           })}
         >
           <Tab.Screen name="Discover" component={Discover} />
-          <Tab.Screen name="Map" component={Home} />
+
+          <Tab.Screen name="Map">
+            {(props) => <Home {...props} session={session} profile={profile} />}
+          </Tab.Screen>
           <Tab.Screen name="Profil">
             {(props) => <Account {...props} session={session} />}
           </Tab.Screen>

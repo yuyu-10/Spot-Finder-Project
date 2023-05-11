@@ -20,7 +20,6 @@ export default function Account({ navigation, session }) {
   async function handleSignOut() {
     try {
       await supabase.auth.signOut();
-      navigation.navigate("SignIn");
     } catch (error) {
       Alert.alert(error.message);
     }

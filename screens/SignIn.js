@@ -36,14 +36,14 @@ export default function SignIn({ navigation, session }) {
     }
   }
 
-  useEffect(() => {
-    if (session && session.user) {
-      navigation.navigate("Account", {
-        id: session.user.id,
-        session: session,
-      });
-    }
-  }, [session, navigation]);
+  // useEffect(() => {
+  //   if (session && session.user) {
+  //     navigation.navigate("Account", {
+  //       id: session.user.id,
+  //       session: session,
+  //     });
+  //   }
+  // }, [session, navigation]);
 
   return (
     <KeyboardAwareScrollView
