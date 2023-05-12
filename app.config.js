@@ -12,7 +12,7 @@ export default {
       backgroundColor: "#ffffff",
     },
     assetBundlePatterns: ["**/*"],
-    scheme: "exp://192.168.5.149:19000",
+    scheme: "exp://192.168.1.28:19000",
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
