@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
+import { Buffer } from "buffer";
+
+global.Buffer = Buffer;
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
