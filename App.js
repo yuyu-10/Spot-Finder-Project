@@ -22,6 +22,7 @@ import Discover from "./screens/Discover";
 export default function App() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState("");
+  const [addresses, setAddresses] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -51,6 +52,7 @@ export default function App() {
             throw new Error(error.message);
           }
           setProfile(data);
+          console.log("profile", profile);
         }
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
@@ -58,6 +60,22 @@ export default function App() {
     };
     fetchProfileData();
   }, [session]);
+
+  useEffect(() => {
+    const fetchAddressData = async () => {
+      try {
+        let { data, error } = await supabase.from("addresses").select("*");
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        setAddresses(data);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+    fetchAddressData();
+  }, []);
 
   return (
     <NavigationContainer>
@@ -116,7 +134,14 @@ export default function App() {
           <Tab.Screen name="Discover" component={Discover} />
 
           <Tab.Screen name="Map">
-            {(props) => <Home {...props} session={session} profile={profile} />}
+            {(props) => (
+              <Home
+                {...props}
+                session={session}
+                profile={profile}
+                addresses={addresses}
+              />
+            )}
           </Tab.Screen>
           <Tab.Screen name="Profil">
             {(props) => <Account {...props} session={session} />}
