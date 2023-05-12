@@ -110,7 +110,7 @@ export default function App() {
             },
             tabBarActiveTintColor: "#CFFF8D",
             tabBarInactiveTintColor: "gray",
-            // headerShown: false,
+            headerShown: false,
           })}
         >
           <Tab.Screen name="Discover" component={Discover} />

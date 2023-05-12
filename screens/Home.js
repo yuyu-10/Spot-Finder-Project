@@ -7,10 +7,19 @@ import {
   TouchableHighlight,
   Text,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function Home({ profile }) {
-  console.log(profile);
+  const markers = [
+    {
+      id: 1,
+      latitude: 48.8564449,
+      longitude: 2.4002913,
+      title: "Le Reacteur",
+      description: "La formation des champion·ne·s !",
+    },
+  ];
   return (
     <>
       <View style={styles.container}>
@@ -19,7 +28,25 @@ export default function Home({ profile }) {
             <Text>
               Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
             </Text>
-            <MapView style={styles.map} />
+
+            <MapView style={styles.map}>
+              {markers.map((marker) => {
+                return (
+                  <Marker
+                    key={marker.id}
+                    coordinate={{
+                      latitude: marker.latitude,
+                      longitude: marker.longitude,
+                    }}
+                    title={marker.title}
+                    description={marker.description}
+                    // image={require("../assets/images/marker.png")}
+                  >
+                    <Ionicons name="location" size={30} color="#425F57" />
+                  </Marker>
+                );
+              })}
+            </MapView>
           </>
         )}
       </View>
