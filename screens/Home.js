@@ -10,6 +10,7 @@ import {
 import MapView from "react-native-maps";
 
 export default function Home({ profile }) {
+  console.log(profile);
   return (
     <>
       <View style={styles.container}>

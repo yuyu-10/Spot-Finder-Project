@@ -71,12 +71,13 @@ export default function App() {
             headerTintColor: "white",
             headerTitleStyle: "bold",
             headerStatusBarHeight: 0,
+            headerShown: false,
           }}
         >
           <Stack.Screen
             name="Welcome"
             component={Welcome}
-            options={{ headerShown: false }}
+            // options={{ headerShown: false }}
           />
           <Stack.Screen name="SignUp">
             {(props) => <SignUp {...props} session={session} />}
@@ -109,6 +110,7 @@ export default function App() {
             },
             tabBarActiveTintColor: "#CFFF8D",
             tabBarInactiveTintColor: "gray",
+            // headerShown: false,
           })}
         >
           <Tab.Screen name="Discover" component={Discover} />
