@@ -15,6 +15,8 @@ import InputStyle from "../components/InputStyle";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,9 +26,15 @@ export default function SignUp({ navigation }) {
       if (password === confirmPassword) {
         setLoading(true);
 
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
+          options: {
+            data: {
+              first_name: firstname,
+              last_name: lastname,
+            },
+          },
         });
         navigation.navigate("SignIn");
 
@@ -55,6 +63,20 @@ export default function SignUp({ navigation }) {
           setter={setEmail}
           value={email}
           placeholder="email@address.com"
+          // autoCapitalize={"none"}
+        />
+
+        <InputStyle
+          setter={setFirstname}
+          value={firstname}
+          placeholder="First name"
+          // autoCapitalize={"none"}
+        />
+
+        <InputStyle
+          setter={setLastname}
+          value={lastname}
+          placeholder="Last Name"
           // autoCapitalize={"none"}
         />
 
