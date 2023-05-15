@@ -2,15 +2,21 @@ import { useState } from "react";
 import { StyleSheet, View, TouchableHighlight, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import List from "./List";
 // import components
 import ModalAddAddress from "../components/ModalAddAddress";
+import SwitchMapToList from "../components/SwithMapToList";
 
 export default function Home({ profile, addresses }) {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(true);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const toggleMapVisibility = () => {
+    setIsMapVisible(!isMapVisible);
   };
 
   return (
@@ -18,29 +24,36 @@ export default function Home({ profile, addresses }) {
       <View style={styles.container}>
         {profile && (
           <>
+            <SwitchMapToList
+              isEnabled={isMapVisible}
+              toggleSwitch={toggleMapVisibility}
+            />
             <Text style={styles.headerContainer}>
               Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
             </Text>
-
-            <MapView style={styles.map}>
-              {addresses &&
-                addresses.map((marker) => {
-                  return (
-                    <Marker
-                      key={marker.id}
-                      coordinate={{
-                        latitude: marker.latitude,
-                        longitude: marker.longitude,
-                      }}
-                      // title={marker.title}
-                      // description={marker.description}
-                      // image={require("../assets/images/marker.png")}
-                    >
-                      <Ionicons name="location" size={30} color="#425F57" />
-                    </Marker>
-                  );
-                })}
-            </MapView>
+            {isMapVisible ? (
+              <List addresses={addresses} />
+            ) : (
+              <MapView style={styles.map}>
+                {addresses &&
+                  addresses.map((marker) => {
+                    return (
+                      <Marker
+                        key={marker.id}
+                        coordinate={{
+                          latitude: marker.latitude,
+                          longitude: marker.longitude,
+                        }}
+                        // title={marker.title}
+                        // description={marker.description}
+                        // image={require("../assets/images/marker.png")}
+                      >
+                        <Ionicons name="location" size={30} color="#425F57" />
+                      </Marker>
+                    );
+                  })}
+              </MapView>
+            )}
             <View style={styles.addAddressContainer}>
               <TouchableHighlight
                 style={styles.addAddressButton}
