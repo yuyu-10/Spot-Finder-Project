@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 
 const List = ({ addresses }) => {
   return (
@@ -7,8 +7,22 @@ const List = ({ addresses }) => {
       {addresses ? (
         addresses.map((address) => (
           <View key={address.id} style={styles.addressContainer}>
-            <Text style={styles.name}>{address.name}</Text>
-            <Text style={styles.postalAddress}>{address.postal_address}</Text>
+            <Image
+              source={require("../assets/images/le_chateaubriand.jpeg")}
+              style={styles.image}
+            />
+            <View style={styles.addressTextContainer}>
+              <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+                {address.name}
+              </Text>
+              <Text
+                style={styles.postalAddress}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {address.postal_address}
+              </Text>
+            </View>
           </View>
         ))
       ) : (
@@ -27,7 +41,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#425F57",
   },
   addressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
+  },
+  addressTextContainer: {
+    flex: 1,
+    marginLeft: 10,
   },
   name: {
     fontSize: 20,
@@ -38,11 +58,20 @@ const styles = StyleSheet.create({
   postalAddress: {
     fontSize: 16,
     color: "#CFFF8D",
+    marginBottom: 10,
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#CFFF8D",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    resizeMode: "cover",
+    borderRadius: 20,
+    borderColor: "#CFFF8D",
+    borderWidth: 1,
   },
 });
 
