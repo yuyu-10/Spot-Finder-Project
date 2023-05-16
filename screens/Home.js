@@ -33,8 +33,6 @@ export default function Home({ profile, addresses }) {
     setIsMapVisible(!isMapVisible);
   };
 
-  console.log(selectedAddress);
-
   return (
     <>
       <View style={styles.container}>
