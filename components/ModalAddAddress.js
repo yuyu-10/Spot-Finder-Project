@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   TouchableOpacity,
@@ -20,12 +21,13 @@ export default function ModalAddAddress({ isModalVisible, toggleModal }) {
 
   const statusBarHeight = Constants.statusBarHeight;
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     if (isModalVisible) {
       inputSearchRef.current.focus();
     }
-  }),
-    [isModalVisible];
+  }, [isModalVisible]);
 
   const renderCloseButton = () => {
     return (
@@ -41,6 +43,10 @@ export default function ModalAddAddress({ isModalVisible, toggleModal }) {
     );
   };
 
+  const handleNavigateToNewAddress = () => {
+    navigation.navigate("NewAddress");
+  };
+
   return (
     <View style={styles.container}>
       <Modal
@@ -49,6 +55,9 @@ export default function ModalAddAddress({ isModalVisible, toggleModal }) {
         style={styles.modal}
       >
         <View style={[styles.modalContent, { paddingTop: statusBarHeight }]}>
+          <TouchableOpacity onPress={handleNavigateToNewAddress}>
+            <Text>Go to NewAddress</Text>
+          </TouchableOpacity>
           <View style={styles.modalHeader}>
             <TouchableOpacity
               onPress={toggleModal}
@@ -64,7 +73,10 @@ export default function ModalAddAddress({ isModalVisible, toggleModal }) {
                 ref={inputSearchRef}
                 listStyle={styles.listStyle}
                 placeholder="Type a place"
-                onPress={(data, details = null) => console.log(data, details)}
+                onPress={(data, details = null) => {
+                  toggleModal();
+                  navigation.navigate("NewAddress", { data, details });
+                }}
                 query={{ key: "AIzaSyCRYEssMuNLmqhUWyH4qZdFoK7KuWVRCrQ" }}
                 fetchDetails={true}
                 onFail={(error) => console.log(error)}
