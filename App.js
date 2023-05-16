@@ -25,6 +25,11 @@ import NewAddress from "./screens/NewAddress";
 
 function Map({ session, profile, addresses }) {
   const Stack = createNativeStackNavigator();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   return (
     <Stack.Navigator
@@ -40,10 +45,24 @@ function Map({ session, profile, addresses }) {
             session={session}
             profile={profile}
             addresses={addresses}
+            toggleModal={toggleModal}
+            isModalVisible={isModalVisible}
           />
         )}
       </Stack.Screen>
-      <Stack.Screen name="NewAddress" component={NewAddress} />
+      {/* <Stack.Screen name="NewAddress" component={NewAddress} /> */}
+      <Stack.Screen name="NewAddress">
+        {(props) => (
+          <NewAddress
+            {...props}
+            session={session}
+            profile={profile}
+            addresses={addresses}
+            toggleModal={toggleModal}
+            isModalVisible={isModalVisible}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }

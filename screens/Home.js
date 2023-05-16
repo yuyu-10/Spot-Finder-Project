@@ -6,6 +6,8 @@ import {
   Text,
   Dimensions,
 } from "react-native";
+
+//import packages
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -17,8 +19,12 @@ import UserGeolocation from "../components/UserGeolocation";
 
 const { width, height } = Dimensions.get("window");
 
-export default function Home({ profile, addresses }) {
-  const [isModalVisible, setModalVisible] = useState(false);
+export default function Home({
+  profile,
+  addresses,
+  toggleModal,
+  isModalVisible,
+}) {
   const [isMapVisible, setIsMapVisible] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
@@ -36,10 +42,6 @@ export default function Home({ profile, addresses }) {
       });
     }
   }, [selectedAddress]);
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
@@ -71,13 +73,6 @@ export default function Home({ profile, addresses }) {
             </Text>
 
             {isMapVisible ? (
-              <List
-                addresses={addresses}
-                selectedAddress={selectedAddress}
-                setSelectedAddress={setSelectedAddress}
-                toggleMapVisibility={toggleMapVisibility}
-              />
-            ) : (
               <>
                 <UserGeolocation coords={coords} setCoords={setCoords} />
                 <MapView ref={mapRef} style={styles.map} region={mapRegion}>
@@ -114,6 +109,13 @@ export default function Home({ profile, addresses }) {
                   )}
                 </MapView>
               </>
+            ) : (
+              <List
+                addresses={addresses}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+                toggleMapVisibility={toggleMapVisibility}
+              />
             )}
 
             <View style={styles.addAddressContainer}>

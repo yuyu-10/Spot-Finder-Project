@@ -22,5 +22,8 @@ export default {
     web: {
       favicon: "./assets/favicon.png",
     },
+    extra: {
+      apiGoogle: process.env.APP_ENV_GOOGLE_API,
+    },
   },
 };
