@@ -5,7 +5,7 @@ const SwitchMapToList = ({ isEnabled, toggleSwitch }) => {
   return (
     <View style={styles.container}>
       <View style={[styles.button, isEnabled && styles.buttonActive]}>
-        <Text style={styles.buttonText}>{isEnabled ? "List" : "Map"}</Text>
+        <Text style={styles.buttonText}>{isEnabled ? "Map" : "List"}</Text>
       </View>
       <Switch
         trackColor={{ false: "#425F57", true: "#749F82" }}
