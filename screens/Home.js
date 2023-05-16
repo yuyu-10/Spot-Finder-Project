@@ -1,16 +1,39 @@
-import { useState } from "react";
-import { StyleSheet, View, TouchableHighlight, Text } from "react-native";
+import { useState, useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  TouchableHighlight,
+  Text,
+  Dimensions,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // import components
 import ModalAddAddress from "../components/ModalAddAddress";
+import UserGeolocation from "../components/UserGeolocation";
+
+const { width, height } = Dimensions.get("window");
 
 export default function Home({ profile, addresses }) {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [coords, setCoords] = useState();
+  const mapRef = useRef(null);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const centerMapOnUser = () => {
+    if (mapRef.current && coords) {
+      const region = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      };
+      mapRef.current.animateToRegion(region, 1000);
+    }
   };
 
   return (
@@ -21,8 +44,9 @@ export default function Home({ profile, addresses }) {
             <Text style={styles.headerContainer}>
               Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
             </Text>
+            <UserGeolocation coords={coords} setCoords={setCoords} />
 
-            <MapView style={styles.map}>
+            <MapView ref={mapRef} style={styles.map}>
               {addresses &&
                 addresses.map((marker) => {
                   return (
@@ -40,6 +64,20 @@ export default function Home({ profile, addresses }) {
                     </Marker>
                   );
                 })}
+              {coords && (
+                <Marker
+                  coordinate={{
+                    latitude: coords.latitude,
+                    longitude: coords.longitude,
+                  }}
+                >
+                  <Ionicons
+                    name="navigate-circle-outline"
+                    size={30}
+                    color="#425F57"
+                  />
+                </Marker>
+              )}
             </MapView>
             <View style={styles.addAddressContainer}>
               <TouchableHighlight
@@ -54,6 +92,13 @@ export default function Home({ profile, addresses }) {
                 toggleModal={toggleModal}
               />
             </View>
+            <TouchableHighlight
+              style={styles.centerButton}
+              underlayColor="#42855B"
+              onPress={centerMapOnUser}
+            >
+              <Ionicons name="locate" size={24} color="#fff" />
+            </TouchableHighlight>
           </>
         )}
       </View>
@@ -97,5 +142,16 @@ const styles = StyleSheet.create({
     color: "#425F57",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  centerButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#42855B",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
