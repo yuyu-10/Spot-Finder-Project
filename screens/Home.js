@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, UseEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -6,23 +6,48 @@ import {
   Text,
   Dimensions,
 } from "react-native";
+
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // import components
 import ModalAddAddress from "../components/ModalAddAddress";
+import List from "./List";
+import SwitchMapToList from "../components/SwithMapToList";
 import UserGeolocation from "../components/UserGeolocation";
+
+
 
 const { width, height } = Dimensions.get("window");
 
 export default function Home({ profile, addresses }) {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [mapRegion, setMapRegion] = useState(null);
   const [coords, setCoords] = useState();
   const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      const { latitude, longitude } = selectedAddress;
+      setMapRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    }
+  }, [selectedAddress]);
+
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+
+  const toggleMapVisibility = () => {
+    setIsMapVisible(!isMapVisible);
 
   const centerMapOnUser = () => {
     if (mapRef.current && coords) {
@@ -34,6 +59,7 @@ export default function Home({ profile, addresses }) {
       };
       mapRef.current.animateToRegion(region, 1000);
     }
+
   };
 
   return (
@@ -41,12 +67,24 @@ export default function Home({ profile, addresses }) {
       <View style={styles.container}>
         {profile && (
           <>
+            <SwitchMapToList
+              isEnabled={isMapVisible}
+              toggleSwitch={toggleMapVisibility}
+            />
             <Text style={styles.headerContainer}>
               Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
             </Text>
-            <UserGeolocation coords={coords} setCoords={setCoords} />
 
-            <MapView ref={mapRef} style={styles.map}>
+            {isMapVisible ? (
+              <List
+                addresses={addresses}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+                toggleMapVisibility={toggleMapVisibility}
+              />
+            ) : (
+             <UserGeolocation coords={coords} setCoords={setCoords}  />
+              <MapView ref={mapRef} style={styles.map} region={mapRegion}>
               {addresses &&
                 addresses.map((marker) => {
                   return (
@@ -79,6 +117,8 @@ export default function Home({ profile, addresses }) {
                 </Marker>
               )}
             </MapView>
+            
+
             <View style={styles.addAddressContainer}>
               <TouchableHighlight
                 style={styles.addAddressButton}
