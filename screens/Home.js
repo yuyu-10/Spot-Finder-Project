@@ -1,4 +1,4 @@
-import { useState, useRef, UseEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +6,6 @@ import {
   Text,
   Dimensions,
 } from "react-native";
-
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -15,8 +14,6 @@ import ModalAddAddress from "../components/ModalAddAddress";
 import List from "./List";
 import SwitchMapToList from "../components/SwithMapToList";
 import UserGeolocation from "../components/UserGeolocation";
-
-
 
 const { width, height } = Dimensions.get("window");
 
@@ -40,14 +37,13 @@ export default function Home({ profile, addresses }) {
     }
   }, [selectedAddress]);
 
-
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
+  };
 
   const centerMapOnUser = () => {
     if (mapRef.current && coords) {
@@ -59,7 +55,6 @@ export default function Home({ profile, addresses }) {
       };
       mapRef.current.animateToRegion(region, 1000);
     }
-
   };
 
   return (
@@ -83,41 +78,43 @@ export default function Home({ profile, addresses }) {
                 toggleMapVisibility={toggleMapVisibility}
               />
             ) : (
-             <UserGeolocation coords={coords} setCoords={setCoords}  />
-              <MapView ref={mapRef} style={styles.map} region={mapRegion}>
-              {addresses &&
-                addresses.map((marker) => {
-                  return (
+              <>
+                <UserGeolocation coords={coords} setCoords={setCoords} />
+                <MapView ref={mapRef} style={styles.map} region={mapRegion}>
+                  {addresses &&
+                    addresses.map((marker) => {
+                      return (
+                        <Marker
+                          key={marker.id}
+                          coordinate={{
+                            latitude: marker.latitude,
+                            longitude: marker.longitude,
+                          }}
+                          // title={marker.title}
+                          // description={marker.description}
+                          // image={require("../assets/images/marker.png")}
+                        >
+                          <Ionicons name="location" size={30} color="#425F57" />
+                        </Marker>
+                      );
+                    })}
+                  {coords && (
                     <Marker
-                      key={marker.id}
                       coordinate={{
-                        latitude: marker.latitude,
-                        longitude: marker.longitude,
+                        latitude: coords.latitude,
+                        longitude: coords.longitude,
                       }}
-                      // title={marker.title}
-                      // description={marker.description}
-                      // image={require("../assets/images/marker.png")}
                     >
-                      <Ionicons name="location" size={30} color="#425F57" />
+                      <Ionicons
+                        name="navigate-circle-outline"
+                        size={30}
+                        color="#425F57"
+                      />
                     </Marker>
-                  );
-                })}
-              {coords && (
-                <Marker
-                  coordinate={{
-                    latitude: coords.latitude,
-                    longitude: coords.longitude,
-                  }}
-                >
-                  <Ionicons
-                    name="navigate-circle-outline"
-                    size={30}
-                    color="#425F57"
-                  />
-                </Marker>
-              )}
-            </MapView>
-            
+                  )}
+                </MapView>
+              </>
+            )}
 
             <View style={styles.addAddressContainer}>
               <TouchableHighlight
