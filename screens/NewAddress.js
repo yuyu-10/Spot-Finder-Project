@@ -1,4 +1,7 @@
+
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+
+
 import { useEffect } from "react";
 
 //import packages
@@ -37,6 +40,7 @@ export default function NewAddress({
         <Text>{details.address_components[0].types}</Text>
       </View>
     </>
+
   );
 }
 
@@ -58,5 +62,6 @@ const styles = StyleSheet.create({
   },
   emptyHeader: {
     flex: 1,
+
   },
 });

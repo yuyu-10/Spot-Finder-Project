@@ -31,6 +31,7 @@ function Map({ session, profile, addresses }) {
     setModalVisible(!isModalVisible);
   };
 
+
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -50,7 +51,7 @@ function Map({ session, profile, addresses }) {
           />
         )}
       </Stack.Screen>
-      {/* <Stack.Screen name="NewAddress" component={NewAddress} /> */}
+    
       <Stack.Screen name="NewAddress">
         {(props) => (
           <NewAddress
@@ -63,6 +64,12 @@ function Map({ session, profile, addresses }) {
           />
         )}
       </Stack.Screen>
+
+          />
+        )}
+      </Stack.Screen>
+    
+
     </Stack.Navigator>
   );
 }
