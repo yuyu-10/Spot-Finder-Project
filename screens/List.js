@@ -1,49 +1,105 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 
-const List = ({ addresses }) => {
+const List = ({
+  addresses,
+  selectedAddress,
+  setSelectedAddress,
+  toggleMapVisibility,
+}) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImagePress = (image) => {
+    setSelectedImage(image);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
+  const handleAddressPress = (address) => {
+    setSelectedAddress(address);
+    toggleMapVisibility();
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: "#425F57" }]}>
+    <ScrollView style={[styles.container, { backgroundColor: "#515251" }]}>
       {addresses ? (
-        addresses.map((address) => (
-          <View key={address.id} style={styles.addressContainer}>
-            <Image
-              source={require("../assets/images/le_chateaubriand.jpeg")}
-              style={styles.image}
-            />
-            <View style={styles.addressTextContainer}>
-              <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
-                {address.name}
-              </Text>
-              <Text
-                style={styles.postalAddress}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
-                {address.postal_address}
-              </Text>
+        addresses.map((address, index) => (
+          <View key={address.id}>
+            <View style={styles.addressContainer}>
+              <TouchableOpacity onPress={() => handleImagePress(address.image)}>
+                <Image
+                  source={require("../assets/images/le_chateaubriand.jpeg")}
+                  style={styles.image}
+                />
+              </TouchableOpacity>
+
+              <View style={styles.addressTextContainer}>
+                <TouchableOpacity onPress={() => handleAddressPress(address)}>
+                  <Text
+                    style={styles.name}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {address.name}
+                  </Text>
+                  <Text
+                    style={styles.postalAddress}
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                  >
+                    {address.postal_address}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
+
+            {index !== addresses.length - 1 && <View style={styles.line} />}
           </View>
         ))
       ) : (
         <Text style={styles.text}>No addresses found.</Text>
       )}
-    </View>
+
+      <Modal visible={selectedImage !== null} onRequestClose={closeModal}>
+        <View style={styles.modalContainer}>
+          <Image
+            source={require("../assets/images/le_chateaubriand.jpeg")}
+            style={styles.modalImage}
+          />
+          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 60,
+    marginTop: 84,
     paddingVertical: 20,
     paddingHorizontal: 16,
     backgroundColor: "#425F57",
+    borderBottom: 1,
   },
   addressContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: 30,
+    marginTop: 30,
   },
   addressTextContainer: {
     flex: 1,
@@ -69,9 +125,38 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: "cover",
-    borderRadius: 20,
-    borderColor: "#CFFF8D",
-    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: "#353635",
+    borderWidth: 0.8,
+  },
+  line: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#353635",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
+  modalImage: {
+    width: 400,
+    height: 400,
+    resizeMode: "contain",
+    borderRadius: 3,
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#CFFF8D",
+    borderRadius: 3,
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#425F57",
+    textAlign: "center",
   },
 });
 

@@ -8,7 +8,7 @@ const SwitchMapToList = ({ isEnabled, toggleSwitch }) => {
         <Text style={styles.buttonText}>{isEnabled ? "List" : "Map"}</Text>
       </View>
       <Switch
-        trackColor={{ false: "#425F57", true: "#425F57" }}
+        trackColor={{ false: "#425F57", true: "#749F82" }}
         thumbColor={isEnabled ? "#CFFF8D" : "#CFFF8D"}
         ios_backgroundColor="#425F57"
         onValueChange={toggleSwitch}

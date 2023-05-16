@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableHighlight, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -10,6 +10,20 @@ import SwitchMapToList from "../components/SwithMapToList";
 export default function Home({ profile, addresses }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [mapRegion, setMapRegion] = useState(null);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      const { latitude, longitude } = selectedAddress;
+      setMapRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    }
+  }, [selectedAddress]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -18,6 +32,8 @@ export default function Home({ profile, addresses }) {
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
   };
+
+  console.log(selectedAddress);
 
   return (
     <>
@@ -32,9 +48,14 @@ export default function Home({ profile, addresses }) {
               Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
             </Text>
             {isMapVisible ? (
-              <List addresses={addresses} />
+              <List
+                addresses={addresses}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+                toggleMapVisibility={toggleMapVisibility}
+              />
             ) : (
-              <MapView style={styles.map}>
+              <MapView style={styles.map} region={mapRegion}>
                 {addresses &&
                   addresses.map((marker) => {
                     return (
