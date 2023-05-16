@@ -21,6 +21,32 @@ import SignIn from "./screens/SignIn";
 import Account from "./screens/Account";
 import Home from "./screens/Home";
 import Discover from "./screens/Discover";
+import NewAddress from "./screens/NewAddress";
+
+function Map({ session, profile, addresses }) {
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Home">
+        {(props) => (
+          <Home
+            {...props}
+            session={session}
+            profile={profile}
+            addresses={addresses}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="NewAddress" component={NewAddress} />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -55,7 +81,6 @@ export default function App() {
             throw new Error(error.message);
           }
           setProfile(data);
-          console.log("profile", profile);
         }
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
@@ -82,75 +107,79 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {session === null ? (
-        <Stack.Navigator
-          initialRouteName="Welcome"
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: "#425F57",
-            },
-            headerTintColor: "white",
-            headerTitleStyle: "bold",
-            headerStatusBarHeight: 0,
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen
-            name="Welcome"
-            component={Welcome}
-            // options={{ headerShown: false }}
-          />
-          <Stack.Screen name="SignUp">
-            {(props) => <SignUp {...props} session={session} />}
-          </Stack.Screen>
-          <Stack.Screen name="SignIn">
-            {(props) => <SignIn {...props} session={session} />}
-          </Stack.Screen>
-          <Stack.Screen name="Profil" component={Account} />
-        </Stack.Navigator>
-      ) : (
-        <Tab.Navigator
-          initialRouteName="Map"
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-
-              if (route.name === "Map") {
-                iconName = focused ? "map" : "map-outline";
-              } else if (route.name === "Discover") {
-                iconName = focused ? "search" : "search-outline";
-              } else if (route.name === "Profil") {
-                iconName = focused ? "person" : "person-outline";
-              }
-
-              // You can return any component that you like here!
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarStyle: {
-              backgroundColor: "#425F57",
-            },
-            tabBarActiveTintColor: "#CFFF8D",
-            tabBarInactiveTintColor: "gray",
-            headerShown: false,
-          })}
-        >
-          <Tab.Screen name="Discover" component={Discover} />
-
-          <Tab.Screen name="Map">
+      <Stack.Navigator
+        initialRouteName="Welcome"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#425F57",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: "bold",
+          headerStatusBarHeight: 0,
+          headerShown: false,
+        }}
+      >
+        {session === null ? (
+          <>
+            <Stack.Screen name="Welcome" component={Welcome} />
+            <Stack.Screen name="SignUp">
+              {(props) => <SignUp {...props} session={session} />}
+            </Stack.Screen>
+            <Stack.Screen name="SignIn">
+              {(props) => <SignIn {...props} session={session} />}
+            </Stack.Screen>
+            <Stack.Screen name="Profil" component={Account} />
+          </>
+        ) : (
+          <Stack.Screen name="MainApp">
             {(props) => (
-              <Home
-                {...props}
-                session={session}
-                profile={profile}
-                addresses={addresses}
-              />
+              <Tab.Navigator
+                initialRouteName="Map"
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+
+                    if (route.name === "Map") {
+                      iconName = focused ? "map" : "map-outline";
+                    } else if (route.name === "Discover") {
+                      iconName = focused ? "search" : "search-outline";
+                    } else if (route.name === "Profil") {
+                      iconName = focused ? "person" : "person-outline";
+                    }
+
+                    return (
+                      <Ionicons name={iconName} size={size} color={color} />
+                    );
+                  },
+                  tabBarStyle: {
+                    backgroundColor: "#425F57",
+                  },
+                  tabBarActiveTintColor: "#CFFF8D",
+                  tabBarInactiveTintColor: "gray",
+                  headerShown: false,
+                })}
+              >
+                <Tab.Screen name="Discover" component={Discover} />
+
+                <Tab.Screen name="Map">
+                  {(props) => (
+                    <Map
+                      {...props}
+                      session={session}
+                      profile={profile}
+                      addresses={addresses}
+                    />
+                  )}
+                </Tab.Screen>
+
+                <Tab.Screen name="Profil">
+                  {(props) => <Account {...props} session={session} />}
+                </Tab.Screen>
+              </Tab.Navigator>
             )}
-          </Tab.Screen>
-          <Tab.Screen name="Profil">
-            {(props) => <Account {...props} session={session} />}
-          </Tab.Screen>
-        </Tab.Navigator>
-      )}
+          </Stack.Screen>
+        )}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
