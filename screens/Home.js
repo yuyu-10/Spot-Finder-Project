@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     marginTop: 50,
     padding: 10,
-    backgroundColor: "#FFFFFF",
-    color: "#425F57",
+    backgroundColor: "#425F57",
+    color: "#FFFAF0",
     textAlign: "center",
     fontWeight: "bold",
   },

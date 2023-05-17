@@ -9,6 +9,7 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const List = ({
   addresses,
@@ -32,20 +33,23 @@ const List = ({
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: "#515251" }]}>
-      {addresses ? (
-        addresses.map((address, index) => (
-          <View key={address.id}>
-            <View style={styles.addressContainer}>
-              <TouchableOpacity onPress={() => handleImagePress(address.image)}>
-                <Image
-                  source={require("../assets/images/le_chateaubriand.jpeg")}
-                  style={styles.image}
-                />
-              </TouchableOpacity>
+    <>
+      <View style={styles.mapToListBanner}></View>
+      <ScrollView style={[styles.container, { backgroundColor: "#FFFAF0" }]}>
+        {addresses ? (
+          addresses.map((address, index) => (
+            <View key={address.id}>
+              <View style={styles.addressContainer}>
+                <TouchableOpacity
+                  onPress={() => handleImagePress(address.image)}
+                >
+                  <Image
+                    source={require("../assets/images/le_chateaubriand.jpeg")}
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
 
-              <View style={styles.addressTextContainer}>
-                <TouchableOpacity onPress={() => handleAddressPress(address)}>
+                <View style={styles.addressTextContainer}>
                   <Text
                     style={styles.name}
                     numberOfLines={1}
@@ -60,36 +64,41 @@ const List = ({
                   >
                     {address.postal_address}
                   </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleAddressPress(address)}>
+                    <View style={styles.mapContainer}>
+                      <Ionicons name="map-outline" style={styles.mapIcon} />
+                      <Text style={styles.mapText}> See on Map</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
+
+              {index !== addresses.length - 1 && <View style={styles.line} />}
             </View>
+          ))
+        ) : (
+          <Text style={styles.text}>No addresses found.</Text>
+        )}
 
-            {index !== addresses.length - 1 && <View style={styles.line} />}
+        <Modal visible={selectedImage !== null} onRequestClose={closeModal}>
+          <View style={styles.modalContainer}>
+            <Image
+              source={require("../assets/images/le_chateaubriand.jpeg")}
+              style={styles.modalImage}
+            />
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
-        ))
-      ) : (
-        <Text style={styles.text}>No addresses found.</Text>
-      )}
-
-      <Modal visible={selectedImage !== null} onRequestClose={closeModal}>
-        <View style={styles.modalContainer}>
-          <Image
-            source={require("../assets/images/le_chateaubriand.jpeg")}
-            style={styles.modalImage}
-          />
-          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    </ScrollView>
+        </Modal>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 84,
     paddingVertical: 20,
     paddingHorizontal: 16,
     backgroundColor: "#425F57",
@@ -108,18 +117,18 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#CFFF8D",
+    color: "#425F57",
     marginBottom: 8,
   },
   postalAddress: {
     fontSize: 16,
-    color: "#CFFF8D",
+    color: "#425F57",
     marginBottom: 10,
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#CFFF8D",
+    color: "#425F57",
   },
   image: {
     width: 100,
@@ -157,6 +166,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#425F57",
     textAlign: "center",
+  },
+  mapToListBanner: {
+    backgroundColor: "#749F82",
+    width: "100%",
+    height: 80,
+  },
+  mapContainer: {
+    flexDirection: "row",
+  },
+  mapIcon: {
+    color: "#749F82",
+    marginTop: 2,
+  },
+  mapText: {
+    color: "#749F82",
   },
 });
 
