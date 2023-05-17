@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 //import components
-import TagIcon from "../components/Tag";
+import TagIcon from "../components/TagIcon";
 
 //import packages
 import Constants from "expo-constants";
@@ -13,9 +13,28 @@ export default function NewAddress({
   navigation: { goBack },
   toggleModal,
 }) {
+  const [tagArray, setTagArray] = useState([]);
   const { data, details } = route.params;
-
   const statusBarHeight = Constants.statusBarHeight;
+
+  const handleTagPress = (tag) => {
+    if (tagArray.includes(tag)) {
+      // Remove the tag if it's already selected
+      setTagArray(tagArray.filter((t) => t !== tag));
+    } else {
+      // Add the tag if it's not selected
+      setTagArray([...tagArray, tag]);
+    }
+  };
+
+  const tagColor = {
+    NightLife: "#4B0082",
+    Museum: "#FF8C00",
+    Restaurant: "#20B2AA",
+    Cafe: "#DEB887",
+    Art_Gallery: "#FFB6C1",
+    Book_Store: "#FFD700",
+  };
 
   return (
     <View style={{ backgroundColor: "#FFFAF0", flex: 1 }}>
@@ -46,14 +65,59 @@ export default function NewAddress({
           </View>
         </View>
         <View>
-          <Text style={styles.tagContainer}>Choisissez au moins un tag...</Text>
+          <Text style={styles.tagContainer}>
+            {tagArray.length > 0
+              ? tagArray.map((tag, index) => {
+                  return (
+                    <TagIcon
+                      key={index}
+                      label={tag}
+                      onPress={() => handleTagPress(tag)}
+                      backgroundColor={tagColor[tag]}
+                      style={{ marginRight: 0, marginTop: 0 }}
+                    />
+                  );
+                })
+              : "Choisissez au moins un tag..."}
+          </Text>
           <View style={styles.tagIconsContainer}>
-            <TagIcon backgroundColor="#4B0082" label="NightLife" />
-            <TagIcon backgroundColor="#FF8C00" label="Museum" />
-            <TagIcon backgroundColor="#20B2AA" label="Restaurant" />
-            <TagIcon backgroundColor="#DEB887" label="Cafe" />
-            <TagIcon backgroundColor="#FFB6C1" label="Art Gallery" />
-            <TagIcon backgroundColor="#FFD700" label="Book Store" />
+            <TagIcon
+              backgroundColor={tagColor["NightLife"]}
+              label="NightLife"
+              onPress={() => handleTagPress("NightLife")}
+              selected={tagArray.some((tag) => tag === "NightLife")}
+            />
+            <TagIcon
+              backgroundColor={tagColor["Museum"]}
+              label="Museum"
+              onPress={() => handleTagPress("Museum")}
+              selected={tagArray.some((tag) => tag === "Museum")}
+            />
+
+            <TagIcon
+              backgroundColor={tagColor["Restaurant"]}
+              label="Restaurant"
+              onPress={() => handleTagPress("Restaurant")}
+              selected={tagArray.some((tag) => tag === "Restaurant")}
+            />
+            <TagIcon
+              backgroundColor={tagColor["Cafe"]}
+              label="Cafe"
+              onPress={() => handleTagPress("Cafe")}
+              selected={tagArray.some((tag) => tag === "Cafe")}
+            />
+            <TagIcon
+              backgroundColor={tagColor["Art_Gallery"]}
+              label="Art_Gallery"
+              onPress={() => handleTagPress("Art_Gallery")}
+              selected={tagArray.some((tag) => tag === "Art_Gallery")}
+            />
+            <TagIcon
+              backgroundColor={tagColor["Book_Store"]}
+              label="Book_Store"
+              onPress={() => handleTagPress("Book_Store")}
+              selected={tagArray.some((tag) => tag === "Book_Store")}
+            />
           </View>
         </View>
       </View>
@@ -96,12 +160,13 @@ const styles = StyleSheet.create({
   tagContainer: { marginTop: 30, color: "gray" },
   tagIconsContainer: { marginTop: 30, flexDirection: "row", flexWrap: "wrap" },
   tagIcon: {
-    backgroundColor: "purple",
+    borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    borderRadius: 5,
-    flexShrink: 1,
-    alignSelf: "flex-start",
-    marginRight: 10,
+  },
+  tagText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
   },
 });
