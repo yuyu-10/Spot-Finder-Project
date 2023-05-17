@@ -5,7 +5,6 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
-  ScrollView,
   Alert,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -13,9 +12,8 @@ import { supabase } from "../lib/supabase";
 
 //import components & screens
 import InputStyle from "../components/InputStyle";
-import Account from "./Account";
 
-export default function SignIn({ navigation, session }) {
+export default function SignIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,15 +33,6 @@ export default function SignIn({ navigation, session }) {
       setLoading(false);
     }
   }
-
-  // useEffect(() => {
-  //   if (session && session.user) {
-  //     navigation.navigate("Account", {
-  //       id: session.user.id,
-  //       session: session,
-  //     });
-  //   }
-  // }, [session, navigation]);
 
   return (
     <KeyboardAwareScrollView

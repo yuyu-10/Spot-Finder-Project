@@ -31,7 +31,6 @@ function Map({ session, profile, addresses }) {
     setModalVisible(!isModalVisible);
   };
 
-
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -51,7 +50,7 @@ function Map({ session, profile, addresses }) {
           />
         )}
       </Stack.Screen>
-    
+
       <Stack.Screen name="NewAddress">
         {(props) => (
           <NewAddress
@@ -64,12 +63,6 @@ function Map({ session, profile, addresses }) {
           />
         )}
       </Stack.Screen>
-
-          />
-        )}
-      </Stack.Screen>
-    
-
     </Stack.Navigator>
   );
 }
@@ -179,6 +172,7 @@ export default function App() {
                   },
                   tabBarStyle: {
                     backgroundColor: "#425F57",
+                    paddingTop: 10,
                   },
                   tabBarActiveTintColor: "#CFFF8D",
                   tabBarInactiveTintColor: "gray",
