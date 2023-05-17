@@ -22,6 +22,8 @@ import Account from "./screens/Account";
 import Home from "./screens/Home";
 import Discover from "./screens/Discover";
 import NewAddress from "./screens/NewAddress";
+import List from "./screens/List";
+import AddressDetails from "./screens/AddressDetails";
 
 function Map({ session, profile, addresses }) {
   const Stack = createNativeStackNavigator();
@@ -54,6 +56,30 @@ function Map({ session, profile, addresses }) {
       <Stack.Screen name="NewAddress">
         {(props) => (
           <NewAddress
+            {...props}
+            session={session}
+            profile={profile}
+            addresses={addresses}
+            toggleModal={toggleModal}
+            isModalVisible={isModalVisible}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="List">
+        {(props) => (
+          <List
+            {...props}
+            session={session}
+            profile={profile}
+            addresses={addresses}
+            toggleModal={toggleModal}
+            isModalVisible={isModalVisible}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AddressDetails">
+        {(props) => (
+          <AddressDetails
             {...props}
             session={session}
             profile={profile}
