@@ -7,73 +7,89 @@ import {
   Image,
   Dimensions,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import BackButton from "../components/BackButton";
+
 export default function AddressDetails({ route, profile }) {
-  const { selectedAddressDetails } = route.params;
-  console.log(selectedAddressDetails);
+  const { address } = route.params;
+  console.log(address);
 
   const windowWidth = Dimensions.get("window").width;
 
   return (
-    <View style={styles.container}>
-      <View>
-        {profile && (
-          <Text style={styles.headerContainer}>
-            Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
-          </Text>
-        )}
-      </View>
-      <View style={styles.addressDetailsContainer}>
-        <View style={styles.addressTitleContainer}>
-          <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
-            {selectedAddressDetails.name}
-          </Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={styles.container}>
+        <View>
+          {profile && (
+            <Text style={styles.headerContainer}>
+              Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
+            </Text>
+          )}
         </View>
-        <ScrollView
-          style={styles.imageContainer}
-          contentContainerStyle={styles.ScrollViewContent}
-          horizontal={true}
-        >
-          <Image
-            source={require("../assets/images/le_chateaubriand.jpeg")}
-            style={[styles.image, { width: windowWidth }]}
-          />
-          <Image
-            source={require("../assets/images/le_chateaubriand.jpeg")}
-            style={[styles.image, { width: windowWidth }]}
-          />
-          <Image
-            source={require("../assets/images/le_chateaubriand.jpeg")}
-            style={[styles.image, { width: windowWidth }]}
-          />
-        </ScrollView>
-        <View style={styles.addressInfosContainer}>
-          <Text
-            style={styles.postalAddress}
-            numberOfLines={1}
-            ellipsizeMode="tail"
+        <View style={styles.addressDetailsContainer}>
+          <ScrollView
+            style={styles.imageContainer}
+            contentContainerStyle={styles.ScrollViewContent}
+            horizontal={true}
           >
-            {selectedAddressDetails.postal_address}
-          </Text>
-          <Text style={styles.openingHours}>
-            Open Tue-Sat: 12h30-14h / 19h-23h
-          </Text>
-          <Text style={styles.rating}>Rating: </Text>
-          <View style={styles.starRating}>
-            <Ionicons name="star" size={25} color="#f5ca20" />
-            <Ionicons name="star" size={25} color="#f5ca20" />
-            <Ionicons name="star" size={25} color="#f5ca20" />
-            <Ionicons name="star" size={25} color="#f5ca20" />
-            <Ionicons name="star" size={25} color="#f5ca20" />
+            <Image
+              source={require("../assets/images/le_chateaubriand.jpeg")}
+              style={[styles.image, { width: windowWidth }]}
+            />
+            <Image
+              source={require("../assets/images/le_chateaubriand.jpeg")}
+              style={[styles.image, { width: windowWidth }]}
+            />
+            <Image
+              source={require("../assets/images/le_chateaubriand.jpeg")}
+              style={[styles.image, { width: windowWidth }]}
+            />
+          </ScrollView>
+          <View style={styles.addressTitleContainer}>
+            <View style={styles.backButtonView}>
+              <BackButton style={styles.backButton} />
+            </View>
+            <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+              {address.name}
+            </Text>
           </View>
-          <View style={styles.addReviewContainer}>
-            <TextInput>Add a review ...</TextInput>
+          <View style={styles.addressInfosContainer}>
+            <Text
+              style={styles.postalAddress}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {address.postal_address}
+            </Text>
+            <Text style={styles.openingHours}>
+              Open Tue-Sat: 12h30-14h / 19h-23h
+            </Text>
+            <Text style={styles.rating}>Rating: </Text>
+            <View style={styles.starRating}>
+              <Ionicons name="star" size={25} color="#f5ca20" />
+              <Ionicons name="star" size={25} color="#f5ca20" />
+              <Ionicons name="star" size={25} color="#f5ca20" />
+              <Ionicons name="star" size={25} color="#f5ca20" />
+              <Ionicons name="star" size={25} color="#f5ca20" />
+            </View>
+            <View style={styles.addReviewContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Add a review ..."
+                placeholderTextColor="#9e9e9e"
+              ></TextInput>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -96,18 +112,21 @@ const styles = StyleSheet.create({
   },
   addressTitleContainer: {
     alignItems: "center",
+    justifyContent: "center",
     paddingBottom: 20,
-    backgroundColor: "#749F82",
+    backgroundColor: "#FFF9DE",
     paddingTop: 20,
+    borderBottomWidth: 1,
+    flexDirection: "row",
   },
   name: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#CFFF8D",
+    color: "#425F57",
   },
   imageContainer: {
     flex: 2,
-    backgroundColor: "#749F82",
+    backgroundColor: "black",
     paddingTop: 2,
   },
   image: {
@@ -145,9 +164,19 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   addReviewContainer: {
-    height: 50,
-    borderWidth: 2,
-    justifyContent: "center",
-    paddingLeft: 5,
+    height: 70,
+
+    justifyContent: "topCenter",
+    padding: 10,
+  },
+  input: {
+    color: "#425F57",
+  },
+  backButtonView: {
+    right: 100,
+  },
+  backButton: {
+    position: "absolute",
+    zIndex: 1,
   },
 });

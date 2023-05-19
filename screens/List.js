@@ -42,7 +42,7 @@ export default function List({
 
   const handleAddressPress = (address) => {
     setSelectedAddress(address);
-    navigation.navigate("AddressDetails", { selectedAddressDetails: address });
+    navigation.navigate("AddressDetails", { address: address });
   };
 
   return (
