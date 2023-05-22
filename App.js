@@ -23,7 +23,7 @@ import Home from "./screens/Home";
 import Discover from "./screens/Discover";
 import NewAddress from "./screens/NewAddress";
 
-function Map({ session, profile, addresses }) {
+function Map({ session, profile, addresses, tag, setTag }) {
   const Stack = createNativeStackNavigator();
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -55,6 +55,8 @@ function Map({ session, profile, addresses }) {
         {(props) => (
           <NewAddress
             {...props}
+            tag={tag}
+            setTag={setTag}
             session={session}
             profile={profile}
             addresses={addresses}
@@ -70,7 +72,8 @@ function Map({ session, profile, addresses }) {
 export default function App() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState("");
-  const [addresses, setAddresses] = useState("");
+  const [addresses, setAddresses] = useState([]);
+  const [tag, setTag] = useState([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -122,6 +125,21 @@ export default function App() {
       }
     };
     fetchAddressData();
+  }, []);
+
+  useEffect(() => {
+    const fetchTagData = async () => {
+      try {
+        let { data, error } = await supabase.from("tags").select("*");
+        if (error) {
+          throw new Error(error.message);
+        }
+        setTag(data);
+      } catch (error) {
+        console.error("Error fetching tag data:", error.message);
+      }
+    };
+    fetchTagData();
   }, []);
 
   return (
@@ -188,6 +206,8 @@ export default function App() {
                       session={session}
                       profile={profile}
                       addresses={addresses}
+                      tag={tag}
+                      setTag={setTag}
                     />
                   )}
                 </Tab.Screen>

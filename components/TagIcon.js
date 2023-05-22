@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 10,
     marginTop: 10,
+    height: 25,
   },
 
   tagText: {
