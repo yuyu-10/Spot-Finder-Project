@@ -8,14 +8,18 @@ import {
   ScrollView,
   Modal,
   TouchableOpacity,
+  TouchableHighlight,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const List = ({
+export default function List({
   addresses,
-  selectedAddress,
   setSelectedAddress,
   toggleMapVisibility,
-}) => {
+  selectedAddress,
+}) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImagePress = (image) => {
@@ -26,80 +30,105 @@ const List = ({
     setSelectedImage(null);
   };
 
-  const handleAddressPress = (address) => {
+  const handleAddressMapPress = (address) => {
     setSelectedAddress(address);
     toggleMapVisibility();
   };
 
+  const navigation = useNavigation();
+
+  const handleAddressPress = (address) => {
+    setSelectedAddress(address);
+    navigation.navigate("AddressDetails", {
+      address: address,
+      selectedAddress: selectedAddress,
+    });
+  };
+
   return (
-    <ScrollView style={[styles.container, { backgroundColor: "#515251" }]}>
-      {addresses ? (
-        addresses.map((address, index) => (
-          <View key={address.id}>
-            <View style={styles.addressContainer}>
-              <TouchableOpacity onPress={() => handleImagePress(address.image)}>
-                <Image
-                  source={require("../assets/images/le_chateaubriand.jpeg")}
-                  style={styles.image}
-                />
-              </TouchableOpacity>
-
-              <View style={styles.addressTextContainer}>
-                <TouchableOpacity onPress={() => handleAddressPress(address)}>
-                  <Text
-                    style={styles.name}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {address.name}
-                  </Text>
-                  <Text
-                    style={styles.postalAddress}
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                  >
-                    {address.postal_address}
-                  </Text>
+    <>
+      <View style={styles.mapToListBanner}></View>
+      <ScrollView style={[styles.container, { backgroundColor: "#FFFAF0" }]}>
+        {addresses ? (
+          addresses.map((address, index) => (
+            <View key={address.id}>
+              <View style={styles.addressContainer}>
+                <TouchableOpacity
+                  onPress={() => handleImagePress(address.image)}
+                >
+                  <Image
+                    source={require("../assets/images/le_chateaubriand.jpeg")}
+                    style={styles.image}
+                  />
                 </TouchableOpacity>
+
+                <View style={styles.addressTextContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleAddressPress(address);
+                    }}
+                  >
+                    <Text
+                      style={styles.name}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {address.name}
+                    </Text>
+                    <Text
+                      style={styles.postalAddress}
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                    >
+                      {address.postal_address}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleAddressMapPress(address)}
+                  >
+                    <View style={styles.mapContainer}>
+                      <Ionicons name="map-outline" style={styles.mapIcon} />
+                      <Text style={styles.mapText}> See on Map</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
+
+              {index !== addresses.length - 1 && <View style={styles.line} />}
             </View>
+          ))
+        ) : (
+          <Text style={styles.text}>No addresses found.</Text>
+        )}
 
-            {index !== addresses.length - 1 && <View style={styles.line} />}
+        <Modal visible={selectedImage !== null} onRequestClose={closeModal}>
+          <View style={styles.modalContainer}>
+            <Image
+              source={require("../assets/images/le_chateaubriand.jpeg")}
+              style={styles.modalImage}
+            />
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
-        ))
-      ) : (
-        <Text style={styles.text}>No addresses found.</Text>
-      )}
-
-      <Modal visible={selectedImage !== null} onRequestClose={closeModal}>
-        <View style={styles.modalContainer}>
-          <Image
-            source={require("../assets/images/le_chateaubriand.jpeg")}
-            style={styles.modalImage}
-          />
-          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    </ScrollView>
+        </Modal>
+      </ScrollView>
+    </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 84,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    backgroundColor: "#425F57",
     borderBottom: 1,
   },
   addressContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 30,
-    marginTop: 30,
+    marginBottom: 20,
+    marginTop: 20,
   },
   addressTextContainer: {
     flex: 1,
@@ -108,37 +137,37 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#CFFF8D",
+    color: "#425F57",
     marginBottom: 8,
   },
   postalAddress: {
     fontSize: 16,
-    color: "#CFFF8D",
+    color: "#425F57",
     marginBottom: 10,
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#CFFF8D",
+    color: "#425F57",
   },
   image: {
     width: 100,
     height: 100,
     resizeMode: "cover",
     borderRadius: 3,
-    borderColor: "#353635",
+    borderColor: "#425F57",
     borderWidth: 0.8,
   },
   line: {
     width: "100%",
     height: 1,
-    backgroundColor: "#353635",
+    backgroundColor: "#425F57",
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    backgroundColor: "#425F57",
   },
   modalImage: {
     width: 400,
@@ -158,6 +187,19 @@ const styles = StyleSheet.create({
     color: "#425F57",
     textAlign: "center",
   },
+  mapToListBanner: {
+    backgroundColor: "#749F82",
+    width: "100%",
+    height: 80,
+  },
+  mapContainer: {
+    flexDirection: "row",
+  },
+  mapIcon: {
+    color: "#749F82",
+    marginTop: 2,
+  },
+  mapText: {
+    color: "#749F82",
+  },
 });
-
-export default List;

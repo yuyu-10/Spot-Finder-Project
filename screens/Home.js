@@ -24,8 +24,9 @@ export default function Home({
   addresses,
   toggleModal,
   isModalVisible,
+  toggleMapVisibility,
+  isMapVisible,
 }) {
-  const [isMapVisible, setIsMapVisible] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
   const [coords, setCoords] = useState();
@@ -43,9 +44,9 @@ export default function Home({
     }
   }, [selectedAddress]);
 
-  const toggleMapVisibility = () => {
-    setIsMapVisible(!isMapVisible);
-  };
+  // const toggleMapVisibility = () => {
+  //   setIsMapVisible(!isMapVisible);
+  // };
 
   const centerMapOnUser = () => {
     if (mapRef.current && coords) {
@@ -177,8 +178,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     marginTop: 50,
     padding: 10,
-    backgroundColor: "#FFFFFF",
-    color: "#425F57",
+    backgroundColor: "#425F57",
+    color: "#FFFAF0",
     textAlign: "center",
     fontWeight: "bold",
   },

@@ -22,13 +22,20 @@ import Account from "./screens/Account";
 import Home from "./screens/Home";
 import Discover from "./screens/Discover";
 import NewAddress from "./screens/NewAddress";
+import List from "./screens/List";
+import AddressDetails from "./screens/AddressDetails";
 
 function Map({ session, profile, addresses }) {
   const Stack = createNativeStackNavigator();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(true);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const toggleMapVisibility = () => {
+    setIsMapVisible(!isMapVisible);
   };
 
   return (
@@ -47,6 +54,8 @@ function Map({ session, profile, addresses }) {
             addresses={addresses}
             toggleModal={toggleModal}
             isModalVisible={isModalVisible}
+            isMapVisible={isMapVisible}
+            toggleMapVisibility={toggleMapVisibility}
           />
         )}
       </Stack.Screen>
@@ -60,6 +69,31 @@ function Map({ session, profile, addresses }) {
             addresses={addresses}
             toggleModal={toggleModal}
             isModalVisible={isModalVisible}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="List">
+        {(props) => (
+          <List
+            {...props}
+            session={session}
+            profile={profile}
+            addresses={addresses}
+            toggleModal={toggleModal}
+            isModalVisible={isModalVisible}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AddressDetails">
+        {(props) => (
+          <AddressDetails
+            {...props}
+            session={session}
+            profile={profile}
+            addresses={addresses}
+            toggleModal={toggleModal}
+            isModalVisible={isModalVisible}
+            toggleMapVisibility={toggleMapVisibility}
           />
         )}
       </Stack.Screen>

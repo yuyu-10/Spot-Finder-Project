@@ -19,7 +19,7 @@ export default function UserGeolocation({ coords, setCoords }) {
       }
       setIsLoading(false);
     };
-    console.log(coords);
+    // console.log(coords);
     askPermission();
   }, []);
   return (
