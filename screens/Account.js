@@ -6,15 +6,22 @@ import {
   Alert,
   TouchableHighlight,
   Text,
+  TouchableOpacity,
 } from "react-native";
 
 import InputStyle from "../components/InputStyle";
 
-export default function Account({ session }) {
+export default function Account({
+  session,
+  subscriptions,
+  profile,
+  addresses,
+}) {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   //   const [avatarUrl, setAvatarUrl] = useState("");
+  const [followers, SetFollowers] = useState("");
 
   async function handleSignOut() {
     try {
@@ -79,41 +86,88 @@ export default function Account({ session }) {
     }
   }
 
+  // console.log("Session id:", session.user.id);
+  // console.log("Subscriptions: ", subscriptions);
+
+  const userId = session.user.id;
+
+  function countFollowers(id, subscriptions) {
+    let numberOfFollowers = 0;
+    for (i in subscriptions) {
+      if (subscriptions[i].followed_user_id === id) {
+        numberOfFollowers += 1;
+      }
+    }
+    return numberOfFollowers;
+  }
+  // console.log("Number Of Followers: ", countFollowers(userId, subscriptions));
+
+  function countFollowings(id, subscriptions) {
+    let numberOfFollowings = 0;
+    for (i in subscriptions) {
+      if (subscriptions[i].following_user_id === id) {
+        numberOfFollowings += 1;
+      }
+    }
+    return numberOfFollowings;
+  }
+  // console.log("Number Of Followings: ", countFollowings(userId, subscriptions));
+
   return (
-    <View style={styles.accountContainer}>
-      <InputStyle label="Email" value={session?.user?.email} disabled={true} />
+    <>
+      <View style={styles.accountContainer}>
+        <View style={styles.subscriptionsContainer}>
+          <View style={styles.followersContainer}>
+            <Text style={styles.followersText}>Followers</Text>
+            <Text style={styles.followersCount}>
+              {countFollowers(userId, subscriptions)}
+            </Text>
+          </View>
+          <View style={styles.followingsContainer}>
+            <Text style={styles.followingsText}>Followings</Text>
+            <Text style={styles.followingsCount}>
+              {countFollowings(userId, subscriptions)}
+            </Text>
+          </View>
+        </View>
+        <InputStyle
+          label="Email"
+          value={session?.user?.email}
+          disabled={true}
+        />
 
-      <InputStyle
-        value={firstName}
-        setter={setFirstName}
-        placeholder="First Name"
-      />
+        <InputStyle
+          value={firstName}
+          setter={setFirstName}
+          placeholder="First Name"
+        />
 
-      <InputStyle
-        value={lastName}
-        setter={setLastName}
-        placeholder="Last Name"
-      />
+        <InputStyle
+          value={lastName}
+          setter={setLastName}
+          placeholder="Last Name"
+        />
 
-      <TouchableHighlight
-        style={styles.update}
-        underlayColor="#425F57"
-        disabled={loading}
-        onPress={() => updateProfile({ firstName, lastName })}
-      >
-        <Text style={styles.buttonUpdate}>
-          {loading ? "Loading ..." : "Update"}
-        </Text>
-      </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.update}
+          underlayColor="#425F57"
+          disabled={loading}
+          onPress={() => updateProfile({ firstName, lastName })}
+        >
+          <Text style={styles.buttonUpdate}>
+            {loading ? "Loading ..." : "Update"}
+          </Text>
+        </TouchableHighlight>
 
-      <TouchableHighlight
-        style={styles.signOut}
-        underlayColor="#425F57"
-        onPress={handleSignOut}
-      >
-        <Text style={styles.buttonSignOut}>Sign Out</Text>
-      </TouchableHighlight>
-    </View>
+        <TouchableHighlight
+          style={styles.signOut}
+          underlayColor="#425F57"
+          onPress={handleSignOut}
+        >
+          <Text style={styles.buttonSignOut}>Sign Out</Text>
+        </TouchableHighlight>
+      </View>
+    </>
   );
 }
 
@@ -127,6 +181,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     alignSelf: "stretch",
   },
+
   mt20: {
     marginTop: 20,
   },
@@ -135,6 +190,44 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "#425F57",
+  },
+  subscriptionsContainer: {
+    flexDirection: "row",
+    margin: 10,
+  },
+  followersContainer: {
+    alignItems: "center",
+    margin: 2.5,
+    padding: 15,
+    width: "40%",
+    borderRadius: 10,
+    backgroundColor: "#2e3e39",
+  },
+  followersText: {
+    color: "white",
+    margin: 8,
+  },
+  followersCount: {
+    color: "white",
+    fontWeight: "bold",
+    margin: 8,
+  },
+  followingsContainer: {
+    alignItems: "center",
+    margin: 2.5,
+    padding: 15,
+    width: "40%",
+    borderRadius: 10,
+    backgroundColor: "#2e3e39",
+  },
+  followingsText: {
+    color: "white",
+    margin: 8,
+  },
+  followingsCount: {
+    color: "white",
+    fontWeight: "bold",
+    margin: 8,
   },
   buttonUpdate: {
     color: "#425F57",

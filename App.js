@@ -105,6 +105,7 @@ export default function App() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState("");
   const [addresses, setAddresses] = useState("");
+  const [subscriptions, setSubscriptions] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -118,7 +119,12 @@ export default function App() {
     supabase.auth.onAuthStateChange(handleAuthStateChange);
 
     return () => {
-      supabase.auth.offAuthStateChange(handleAuthStateChange);
+      if (
+        supabase.auth &&
+        typeof supabase.auth.offAuthStateChange === "function"
+      ) {
+        supabase.auth.offAuthStateChange(handleAuthStateChange);
+      }
     };
   }, []);
 
@@ -166,7 +172,7 @@ export default function App() {
         if (error) {
           throw new Error(error.message);
         }
-        console.log(data);
+        setSubscriptions(data);
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
       }
@@ -198,7 +204,7 @@ export default function App() {
             <Stack.Screen name="SignIn">
               {(props) => <SignIn {...props} session={session} />}
             </Stack.Screen>
-            <Stack.Screen name="Profil" component={Account} />
+            <Stack.Screen name="Profile" component={Account} />
           </>
         ) : (
           <Stack.Screen name="MainApp">
@@ -213,7 +219,7 @@ export default function App() {
                       iconName = focused ? "map" : "map-outline";
                     } else if (route.name === "Discover") {
                       iconName = focused ? "search" : "search-outline";
-                    } else if (route.name === "Profil") {
+                    } else if (route.name === "Profile") {
                       iconName = focused ? "person" : "person-outline";
                     }
 
@@ -243,8 +249,14 @@ export default function App() {
                   )}
                 </Tab.Screen>
 
-                <Tab.Screen name="Profil">
-                  {(props) => <Account {...props} session={session} />}
+                <Tab.Screen name="Profile">
+                  {(props) => (
+                    <Account
+                      {...props}
+                      session={session}
+                      subscriptions={subscriptions}
+                    />
+                  )}
                 </Tab.Screen>
               </Tab.Navigator>
             )}
