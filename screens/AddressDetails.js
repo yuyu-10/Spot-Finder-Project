@@ -9,16 +9,32 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 import BackButton from "../components/BackButton";
 
-export default function AddressDetails({ route, profile }) {
+export default function AddressDetails({
+  route,
+  profile,
+  selectedAddress,
+  toggleMapVisibility,
+}) {
   const { address } = route.params;
-  console.log(address);
+  // console.log(address);
 
   const windowWidth = Dimensions.get("window").width;
+
+  const navigation = useNavigation();
+
+  const handleAddressMapPress = (address) => {
+    navigation.navigate("Home", {
+      selectedAddress: selectedAddress,
+    });
+    toggleMapVisibility();
+  };
 
   return (
     <KeyboardAvoidingView
@@ -56,18 +72,24 @@ export default function AddressDetails({ route, profile }) {
             <View style={styles.backButtonView}>
               <BackButton style={styles.backButton} />
             </View>
-            <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
-              {address.name}
-            </Text>
+            <View>
+              <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+                {address.name}
+              </Text>
+            </View>
           </View>
           <View style={styles.addressInfosContainer}>
-            <Text
-              style={styles.postalAddress}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+            <TouchableOpacity
+              onPress={() => handleAddressMapPress(selectedAddress)}
             >
-              {address.postal_address}
-            </Text>
+              <Text
+                style={styles.postalAddress}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {address.postal_address}
+              </Text>
+            </TouchableOpacity>
             <Text style={styles.openingHours}>
               Open Tue-Sat: 12h30-14h / 19h-23h
             </Text>
@@ -118,6 +140,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     borderBottomWidth: 1,
     flexDirection: "row",
+    position: "relative",
   },
   name: {
     fontSize: 20,
@@ -173,10 +196,11 @@ const styles = StyleSheet.create({
     color: "#425F57",
   },
   backButtonView: {
-    right: 100,
+    left: 10,
+    position: "absolute",
   },
   backButton: {
-    position: "absolute",
+    padding: 10,
     zIndex: 1,
   },
 });

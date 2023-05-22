@@ -14,14 +14,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-// Importing Screens
-import AddressDetails from "./AddressDetails";
-
 export default function List({
   addresses,
-  selectedAddress,
   setSelectedAddress,
   toggleMapVisibility,
+  selectedAddress,
 }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -42,7 +39,10 @@ export default function List({
 
   const handleAddressPress = (address) => {
     setSelectedAddress(address);
-    navigation.navigate("AddressDetails", { address: address });
+    navigation.navigate("AddressDetails", {
+      address: address,
+      selectedAddress: selectedAddress,
+    });
   };
 
   return (
