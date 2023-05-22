@@ -158,6 +158,23 @@ export default function App() {
     fetchAddressData();
   }, []);
 
+  useEffect(() => {
+    const fetchSubscriptionData = async () => {
+      try {
+        let { data, error } = await supabase.from("subscription").select("*");
+
+        if (error) {
+          throw new Error(error.message);
+        }
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+
+    fetchSubscriptionData();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
