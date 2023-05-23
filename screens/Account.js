@@ -20,6 +20,8 @@ export default function Account({
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [followersNames, setFollowersNames] = useState("");
+  const [followingsNames, setFollowingsNames] = useState("");
   //   const [avatarUrl, setAvatarUrl] = useState("");
 
   async function handleSignOut() {
@@ -103,17 +105,82 @@ export default function Account({
 
   // console.log(subscriptions);
 
-  const followersId = (id, subscriptions) => {
-    let userIdToFetch = [];
-    for (i in subscriptions) {
-      if (subscriptions[i].followed_user_id === id) {
-        userIdToFetch.push(subscriptions[i].following_user_id);
-      }
-    }
-    return userIdToFetch;
+  // Get followers Names
+
+  const getFollowersId = (id, subscriptions) => {
+    return subscriptions
+      .filter((subscription) => subscription.followed_user_id === id)
+      .map((subscription) => subscription.following_user_id);
   };
 
-  console.log("Followers Id", followersId(userId, subscriptions));
+  const followersId = getFollowersId(userId, subscriptions);
+
+  useEffect(() => {
+    const fetchFollowersNames = async () => {
+      try {
+        const result = await Promise.all(
+          followersId.map(async (followerId) => {
+            const { data, error } = await supabase
+              .from("profiles")
+              .select("first_name, last_name")
+              .eq("id", followerId);
+
+            if (error) {
+              throw new Error(error.message);
+            }
+
+            return data;
+          })
+        );
+
+        setFollowersNames(result);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+
+    fetchFollowersNames();
+  }, []);
+
+  console.log("followersNames :", followersNames);
+
+  // Get Followings Names
+  const getFollowingsId = (id, subscriptions) => {
+    return subscriptions
+      .filter((subscription) => subscription.following_user_id === id)
+      .map((subscription) => subscription.followed_user_id);
+  };
+
+  const followingsId = getFollowingsId(userId, subscriptions);
+
+  useEffect(() => {
+    const fetchFollowingsNames = async () => {
+      try {
+        const result = await Promise.all(
+          followingsId.map(async (followingId) => {
+            const { data, error } = await supabase
+              .from("profiles")
+              .select("first_name, last_name")
+              .eq("id", followingId);
+
+            if (error) {
+              throw new Error(error.message);
+            }
+
+            return data;
+          })
+        );
+
+        setFollowingsNames(result);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+
+    fetchFollowingsNames();
+  }, []);
+
+  console.log("followingsNames :", followingsNames);
 
   return (
     <>
