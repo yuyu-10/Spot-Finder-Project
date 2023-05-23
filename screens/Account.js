@@ -11,6 +11,8 @@ import {
 
 import InputStyle from "../components/InputStyle";
 
+import { useNavigation } from "@react-navigation/native";
+
 export default function Account({
   session,
   subscriptions,
@@ -103,8 +105,6 @@ export default function Account({
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   }
 
-  // console.log(subscriptions);
-
   // Get followers Names
 
   const getFollowersId = (id, subscriptions) => {
@@ -142,7 +142,7 @@ export default function Account({
     fetchFollowersNames();
   }, []);
 
-  console.log("followersNames :", followersNames);
+  // console.log("followersNames :", followersNames);
 
   // Get Followings Names
   const getFollowingsId = (id, subscriptions) => {
@@ -180,23 +180,37 @@ export default function Account({
     fetchFollowingsNames();
   }, []);
 
-  console.log("followingsNames :", followingsNames);
+  // console.log("followingsNames :", followingsNames);
+
+  const navigation = useNavigation();
+
+  const navigateToSubscriptions = () => {
+    navigation.navigate("Subscriptions", {
+      followersNames: followersNames,
+      followingsNames: followingsNames,
+    });
+  };
 
   return (
     <>
       <View style={styles.accountContainer}>
         <View style={styles.subscriptionsContainer}>
           <View style={styles.followersContainer}>
-            <Text style={styles.followersText}>Followers</Text>
-            <Text style={styles.followersCount}>
-              {countFollowers(userId, subscriptions)}
-            </Text>
+            <TouchableOpacity onPress={() => navigateToSubscriptions()}>
+              <Text style={styles.followersText}>Followers</Text>
+              <Text style={styles.followersCount}>
+                {countFollowers(userId, subscriptions)}
+              </Text>
+            </TouchableOpacity>
           </View>
+
           <View style={styles.followingsContainer}>
-            <Text style={styles.followingsText}>Followings</Text>
-            <Text style={styles.followingsCount}>
-              {countFollowings(userId, subscriptions)}
-            </Text>
+            <TouchableOpacity onPress={() => navigateToSubscriptions()}>
+              <Text style={styles.followingsText}>Followings</Text>
+              <Text style={styles.followingsCount}>
+                {countFollowings(userId, subscriptions)}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <InputStyle

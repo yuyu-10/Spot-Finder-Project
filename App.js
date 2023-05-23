@@ -24,6 +24,7 @@ import Discover from "./screens/Discover";
 import NewAddress from "./screens/NewAddress";
 import List from "./screens/List";
 import AddressDetails from "./screens/AddressDetails";
+import Subscriptions from "./screens/Subscriptions";
 
 function Map({ session, profile, addresses }) {
   const Stack = createNativeStackNavigator();
@@ -173,7 +174,6 @@ export default function App() {
           throw new Error(error.message);
         }
         setSubscriptions(data);
-        console.log("subscriptions :", data);
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
       }
@@ -252,11 +252,25 @@ export default function App() {
 
                 <Tab.Screen name="Profile">
                   {(props) => (
-                    <Account
-                      {...props}
-                      session={session}
-                      subscriptions={subscriptions}
-                    />
+                    <Stack.Navigator
+                      screenOptions={{
+                        headerShown: false,
+                      }}
+                    >
+                      <Stack.Screen name="Account">
+                        {(props) => (
+                          <Account
+                            {...props}
+                            session={session}
+                            subscriptions={subscriptions}
+                          />
+                        )}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="Subscriptions"
+                        component={Subscriptions}
+                      />
+                    </Stack.Navigator>
                   )}
                 </Tab.Screen>
               </Tab.Navigator>
