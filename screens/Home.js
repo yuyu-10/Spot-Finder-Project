@@ -26,8 +26,10 @@ export default function Home({
   isModalVisible,
   toggleMapVisibility,
   isMapVisible,
+  handleAddressPress,
+  selectedAddress,
+  setSelectedAddress
 }) {
-  const [selectedAddress, setSelectedAddress] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
   const [coords, setCoords] = useState();
   const mapRef = useRef(null);
@@ -43,10 +45,6 @@ export default function Home({
       });
     }
   }, [selectedAddress]);
-
-  // const toggleMapVisibility = () => {
-  //   setIsMapVisible(!isMapVisible);
-  // };
 
   const centerMapOnUser = () => {
     if (mapRef.current && coords) {
@@ -80,18 +78,22 @@ export default function Home({
                   {addresses &&
                     addresses.map((marker) => {
                       return (
-                        <Marker
-                          key={marker.id}
-                          coordinate={{
-                            latitude: marker.latitude,
-                            longitude: marker.longitude,
-                          }}
-                          // title={marker.title}
-                          // description={marker.description}
-                          // image={require("../assets/images/marker.png")}
-                        >
-                          <Ionicons name="location" size={30} color="#425F57" />
-                        </Marker>
+                          <Marker
+                            key={marker.id}
+                            coordinate={{
+                              latitude: marker.latitude,
+                              longitude: marker.longitude,
+                            }}
+                            // title={marker.title}
+                            // description={marker.description}
+                            // image={require("../assets/images/marker.png")}
+                          >
+                            <TouchableHighlight
+                              onPress={() => handleAddressPress(marker)}
+                            >
+                              <Ionicons name="location" size={30} color="#425F57" />
+                            </TouchableHighlight>
+                          </Marker>
                       );
                     })}
                   {coords && (
@@ -116,6 +118,7 @@ export default function Home({
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}
                 toggleMapVisibility={toggleMapVisibility}
+                handleAddressPress={handleAddressPress}
               />
             )}
 

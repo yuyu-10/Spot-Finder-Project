@@ -7,18 +7,15 @@ import {
   Image,
   ScrollView,
   Modal,
-  TouchableOpacity,
-  TouchableHighlight,
+  TouchableOpacity
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function List({
   addresses,
   setSelectedAddress,
   toggleMapVisibility,
-  selectedAddress,
+  handleAddressPress
 }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -33,16 +30,6 @@ export default function List({
   const handleAddressMapPress = (address) => {
     setSelectedAddress(address);
     toggleMapVisibility();
-  };
-
-  const navigation = useNavigation();
-
-  const handleAddressPress = (address) => {
-    setSelectedAddress(address);
-    navigation.navigate("AddressDetails", {
-      address: address,
-      selectedAddress: selectedAddress,
-    });
   };
 
   return (

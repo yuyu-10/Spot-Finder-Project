@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
 import { Buffer } from "buffer";
+import { useNavigation } from "@react-navigation/native";
 
 global.Buffer = Buffer;
 
@@ -29,6 +30,8 @@ function Map({ session, profile, addresses }) {
   const Stack = createNativeStackNavigator();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const navigation = useNavigation();
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -36,6 +39,14 @@ function Map({ session, profile, addresses }) {
 
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
+  };
+
+  const handleAddressPress = (address) => {
+    setSelectedAddress(address);
+    navigation.navigate("AddressDetails", {
+      address: address,
+      selectedAddress: selectedAddress,
+    });
   };
 
   return (
@@ -56,6 +67,9 @@ function Map({ session, profile, addresses }) {
             isModalVisible={isModalVisible}
             isMapVisible={isMapVisible}
             toggleMapVisibility={toggleMapVisibility}
+            handleAddressPress={handleAddressPress}
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
           />
         )}
       </Stack.Screen>
@@ -81,6 +95,8 @@ function Map({ session, profile, addresses }) {
             addresses={addresses}
             toggleModal={toggleModal}
             isModalVisible={isModalVisible}
+            handleAddressPress={handleAddressPress}
+            setSelectedAddress={setSelectedAddress}
           />
         )}
       </Stack.Screen>
