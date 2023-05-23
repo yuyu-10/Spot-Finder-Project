@@ -173,6 +173,7 @@ export default function App() {
           throw new Error(error.message);
         }
         setSubscriptions(data);
+        console.log("subscriptions :", data);
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
       }

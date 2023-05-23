@@ -21,7 +21,6 @@ export default function Account({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   //   const [avatarUrl, setAvatarUrl] = useState("");
-  const [followers, SetFollowers] = useState("");
 
   async function handleSignOut() {
     try {
@@ -86,32 +85,35 @@ export default function Account({
     }
   }
 
-  // console.log("Session id:", session.user.id);
-  // console.log("Subscriptions: ", subscriptions);
-
   const userId = session.user.id;
 
+  // Counting number of followers and followings
+
   function countFollowers(id, subscriptions) {
-    let numberOfFollowers = 0;
-    for (i in subscriptions) {
-      if (subscriptions[i].followed_user_id === id) {
-        numberOfFollowers += 1;
-      }
-    }
-    return numberOfFollowers;
+    return subscriptions
+      .map((subscription) => (subscription.followed_user_id === id ? 1 : 0))
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   }
-  // console.log("Number Of Followers: ", countFollowers(userId, subscriptions));
 
   function countFollowings(id, subscriptions) {
-    let numberOfFollowings = 0;
+    return subscriptions
+      .map((subscription) => (subscription.following_user_id === id ? 1 : 0))
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  }
+
+  // console.log(subscriptions);
+
+  const followersId = (id, subscriptions) => {
+    let userIdToFetch = [];
     for (i in subscriptions) {
-      if (subscriptions[i].following_user_id === id) {
-        numberOfFollowings += 1;
+      if (subscriptions[i].followed_user_id === id) {
+        userIdToFetch.push(subscriptions[i].following_user_id);
       }
     }
-    return numberOfFollowings;
-  }
-  // console.log("Number Of Followings: ", countFollowings(userId, subscriptions));
+    return userIdToFetch;
+  };
+
+  console.log("Followers Id", followersId(userId, subscriptions));
 
   return (
     <>
