@@ -44,10 +44,6 @@ export default function Home({
     }
   }, [selectedAddress]);
 
-  // const toggleMapVisibility = () => {
-  //   setIsMapVisible(!isMapVisible);
-  // };
-
   const centerMapOnUser = () => {
     if (mapRef.current && coords) {
       const region = {

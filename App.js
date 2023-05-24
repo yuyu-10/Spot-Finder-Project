@@ -25,7 +25,7 @@ import NewAddress from "./screens/NewAddress";
 import List from "./screens/List";
 import AddressDetails from "./screens/AddressDetails";
 
-function Map({ session, profile, addresses, tag, setTag }) {
+function Map({ session, profile, addresses, tag }) {
   const Stack = createNativeStackNavigator();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(true);
@@ -65,7 +65,6 @@ function Map({ session, profile, addresses, tag, setTag }) {
           <NewAddress
             {...props}
             tag={tag}
-            setTag={setTag}
             session={session}
             profile={profile}
             addresses={addresses}
