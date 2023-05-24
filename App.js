@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
 import { Buffer } from "buffer";
+import { useNavigation } from "@react-navigation/native";
 
 global.Buffer = Buffer;
 
@@ -26,10 +27,12 @@ import List from "./screens/List";
 import AddressDetails from "./screens/AddressDetails";
 import Subscriptions from "./screens/Subscriptions";
 
-function Map({ session, profile, addresses }) {
+function Map({ session, profile, addresses, tag }) {
   const Stack = createNativeStackNavigator();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const navigation = useNavigation();
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -37,6 +40,14 @@ function Map({ session, profile, addresses }) {
 
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
+  };
+
+  const handleAddressPress = (address) => {
+    setSelectedAddress(address);
+    navigation.navigate("AddressDetails", {
+      address: address,
+      selectedAddress: selectedAddress,
+    });
   };
 
   return (
@@ -57,6 +68,9 @@ function Map({ session, profile, addresses }) {
             isModalVisible={isModalVisible}
             isMapVisible={isMapVisible}
             toggleMapVisibility={toggleMapVisibility}
+            handleAddressPress={handleAddressPress}
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
           />
         )}
       </Stack.Screen>
@@ -65,6 +79,7 @@ function Map({ session, profile, addresses }) {
         {(props) => (
           <NewAddress
             {...props}
+            tag={tag}
             session={session}
             profile={profile}
             addresses={addresses}
@@ -82,6 +97,8 @@ function Map({ session, profile, addresses }) {
             addresses={addresses}
             toggleModal={toggleModal}
             isModalVisible={isModalVisible}
+            handleAddressPress={handleAddressPress}
+            setSelectedAddress={setSelectedAddress}
           />
         )}
       </Stack.Screen>
@@ -107,6 +124,7 @@ export default function App() {
   const [profile, setProfile] = useState("");
   const [addresses, setAddresses] = useState("");
   const [subscriptions, setSubscriptions] = useState("");
+  const [tag, setTag] = useState([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -178,8 +196,22 @@ export default function App() {
         console.error("Error fetching profile data:", error.message);
       }
     };
-
     fetchSubscriptionData();
+     }, []);
+
+    useEffect(() => {
+    const fetchTagData = async () => {
+      try {
+        let { data, error } = await supabase.from("tags").select("*");
+        if (error) {
+          throw new Error(error.message);
+        }
+        setTag(data);
+      } catch (error) {
+        console.error("Error fetching tag data:", error.message);
+      }
+    };
+    fetchTagData();
   }, []);
 
   return (
@@ -246,6 +278,8 @@ export default function App() {
                       session={session}
                       profile={profile}
                       addresses={addresses}
+                      tag={tag}
+                      setTag={setTag}
                     />
                   )}
                 </Tab.Screen>
