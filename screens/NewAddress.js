@@ -22,10 +22,14 @@ export default function NewAddress({
   navigation: { goBack },
   toggleModal,
   tag,
-  setTag,
+  session,
+  profile,
 }) {
   const [tagArray, setTagArray] = useState([]);
   const [isEnabled, setIsEnabled] = useState(false);
+
+  // console.log("session", session);
+  // console.log("profile", profile);
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
@@ -51,13 +55,34 @@ export default function NewAddress({
     try {
       const { data: newAddress, error } = await supabase
         .from("addresses")
-        .insert([dataRegister]);
+        .insert(dataRegister)
+        .select();
       if (error) {
         console.error(error);
         return;
       }
 
       console.log("Address successfully registered:", newAddress);
+
+      const addressId = newAddress[0].id;
+      const profileId = profile[0].id;
+
+      const dataFavorite = {
+        profiles_id: profileId,
+        addresses_id: addressId,
+        tags: tagArray,
+      };
+
+      const { data: newFavorite, error: favoriteError } = await supabase
+        .from("favorites")
+        .insert(dataFavorite)
+        .select();
+      if (favoriteError) {
+        console.error(favoriteError);
+        return;
+      }
+
+      console.log("Favorite successfully registered:", newFavorite);
     } catch (error) {
       console.error(error);
     }
