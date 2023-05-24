@@ -6,14 +6,24 @@ import {
   Alert,
   TouchableHighlight,
   Text,
+  TouchableOpacity,
 } from "react-native";
 
 import InputStyle from "../components/InputStyle";
 
-export default function Account({ session }) {
+import { useNavigation } from "@react-navigation/native";
+
+export default function Account({
+  session,
+  subscriptions,
+  profile,
+  addresses,
+}) {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [followersNames, setFollowersNames] = useState("");
+  const [followingsNames, setFollowingsNames] = useState("");
   //   const [avatarUrl, setAvatarUrl] = useState("");
 
   async function handleSignOut() {
@@ -79,41 +89,168 @@ export default function Account({ session }) {
     }
   }
 
+  const userId = session.user.id;
+
+  // Counting number of followers and followings
+
+  function countFollowers(id, subscriptions) {
+    return subscriptions
+      .map((subscription) => (subscription.followed_user_id === id ? 1 : 0))
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  }
+
+  function countFollowings(id, subscriptions) {
+    return subscriptions
+      .map((subscription) => (subscription.following_user_id === id ? 1 : 0))
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  }
+
+  // Get followers Names
+
+  const getFollowersId = (id, subscriptions) => {
+    return subscriptions
+      .filter((subscription) => subscription.followed_user_id === id)
+      .map((subscription) => subscription.following_user_id);
+  };
+
+  const followersId = getFollowersId(userId, subscriptions);
+
+  useEffect(() => {
+    const fetchFollowersNames = async () => {
+      try {
+        const result = await Promise.all(
+          followersId.map(async (followerId) => {
+            const { data, error } = await supabase
+              .from("profiles")
+              .select("first_name, last_name")
+              .eq("id", followerId);
+
+            if (error) {
+              throw new Error(error.message);
+            }
+
+            return data;
+          })
+        );
+
+        setFollowersNames(result);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+
+    fetchFollowersNames();
+  }, []);
+
+  // console.log("followersNames :", followersNames);
+
+  // Get Followings Names
+  const getFollowingsId = (id, subscriptions) => {
+    return subscriptions
+      .filter((subscription) => subscription.following_user_id === id)
+      .map((subscription) => subscription.followed_user_id);
+  };
+
+  const followingsId = getFollowingsId(userId, subscriptions);
+
+  useEffect(() => {
+    const fetchFollowingsNames = async () => {
+      try {
+        const result = await Promise.all(
+          followingsId.map(async (followingId) => {
+            const { data, error } = await supabase
+              .from("profiles")
+              .select("first_name, last_name")
+              .eq("id", followingId);
+
+            if (error) {
+              throw new Error(error.message);
+            }
+
+            return data;
+          })
+        );
+
+        setFollowingsNames(result);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+
+    fetchFollowingsNames();
+  }, []);
+
+  // console.log("followingsNames :", followingsNames);
+
+  const navigation = useNavigation();
+
+  const navigateToSubscriptions = () => {
+    navigation.navigate("Subscriptions", {
+      followersNames: followersNames,
+      followingsNames: followingsNames,
+    });
+  };
+
   return (
-    <View style={styles.accountContainer}>
-      <InputStyle label="Email" value={session?.user?.email} disabled={true} />
+    <>
+      <View style={styles.accountContainer}>
+        <View style={styles.subscriptionsContainer}>
+          <View style={styles.followersContainer}>
+            <TouchableOpacity onPress={() => navigateToSubscriptions()}>
+              <Text style={styles.followersText}>Followers</Text>
+              <Text style={styles.followersCount}>
+                {countFollowers(userId, subscriptions)}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <InputStyle
-        value={firstName}
-        setter={setFirstName}
-        placeholder="First Name"
-      />
+          <View style={styles.followingsContainer}>
+            <TouchableOpacity onPress={() => navigateToSubscriptions()}>
+              <Text style={styles.followingsText}>Followings</Text>
+              <Text style={styles.followingsCount}>
+                {countFollowings(userId, subscriptions)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <InputStyle
+          label="Email"
+          value={session?.user?.email}
+          disabled={true}
+        />
 
-      <InputStyle
-        value={lastName}
-        setter={setLastName}
-        placeholder="Last Name"
-      />
+        <InputStyle
+          value={firstName}
+          setter={setFirstName}
+          placeholder="First Name"
+        />
 
-      <TouchableHighlight
-        style={styles.update}
-        underlayColor="#425F57"
-        disabled={loading}
-        onPress={() => updateProfile({ firstName, lastName })}
-      >
-        <Text style={styles.buttonUpdate}>
-          {loading ? "Loading ..." : "Update"}
-        </Text>
-      </TouchableHighlight>
+        <InputStyle
+          value={lastName}
+          setter={setLastName}
+          placeholder="Last Name"
+        />
 
-      <TouchableHighlight
-        style={styles.signOut}
-        underlayColor="#425F57"
-        onPress={handleSignOut}
-      >
-        <Text style={styles.buttonSignOut}>Sign Out</Text>
-      </TouchableHighlight>
-    </View>
+        <TouchableHighlight
+          style={styles.update}
+          underlayColor="#425F57"
+          disabled={loading}
+          onPress={() => updateProfile({ firstName, lastName })}
+        >
+          <Text style={styles.buttonUpdate}>
+            {loading ? "Loading ..." : "Update"}
+          </Text>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          style={styles.signOut}
+          underlayColor="#425F57"
+          onPress={handleSignOut}
+        >
+          <Text style={styles.buttonSignOut}>Sign Out</Text>
+        </TouchableHighlight>
+      </View>
+    </>
   );
 }
 
@@ -127,6 +264,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     alignSelf: "stretch",
   },
+
   mt20: {
     marginTop: 20,
   },
@@ -135,6 +273,44 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "#425F57",
+  },
+  subscriptionsContainer: {
+    flexDirection: "row",
+    margin: 10,
+  },
+  followersContainer: {
+    alignItems: "center",
+    margin: 2.5,
+    padding: 15,
+    width: "40%",
+    borderRadius: 10,
+    backgroundColor: "#2e3e39",
+  },
+  followersText: {
+    color: "white",
+    margin: 8,
+  },
+  followersCount: {
+    color: "white",
+    fontWeight: "bold",
+    margin: 8,
+  },
+  followingsContainer: {
+    alignItems: "center",
+    margin: 2.5,
+    padding: 15,
+    width: "40%",
+    borderRadius: 10,
+    backgroundColor: "#2e3e39",
+  },
+  followingsText: {
+    color: "white",
+    margin: 8,
+  },
+  followingsCount: {
+    color: "white",
+    fontWeight: "bold",
+    margin: 8,
   },
   buttonUpdate: {
     color: "#425F57",

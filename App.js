@@ -25,6 +25,7 @@ import Discover from "./screens/Discover";
 import NewAddress from "./screens/NewAddress";
 import List from "./screens/List";
 import AddressDetails from "./screens/AddressDetails";
+import Subscriptions from "./screens/Subscriptions";
 
 function Map({ session, profile, addresses, tag }) {
   const Stack = createNativeStackNavigator();
@@ -121,7 +122,8 @@ function Map({ session, profile, addresses, tag }) {
 export default function App() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState("");
-  const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState("");
+  const [subscriptions, setSubscriptions] = useState("");
   const [tag, setTag] = useState([]);
 
   useEffect(() => {
@@ -136,7 +138,12 @@ export default function App() {
     supabase.auth.onAuthStateChange(handleAuthStateChange);
 
     return () => {
-      supabase.auth.offAuthStateChange(handleAuthStateChange);
+      if (
+        supabase.auth &&
+        typeof supabase.auth.offAuthStateChange === "function"
+      ) {
+        supabase.auth.offAuthStateChange(handleAuthStateChange);
+      }
     };
   }, []);
 
@@ -177,6 +184,22 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const fetchSubscriptionData = async () => {
+      try {
+        let { data, error } = await supabase.from("subscription").select("*");
+
+        if (error) {
+          throw new Error(error.message);
+        }
+        setSubscriptions(data);
+      } catch (error) {
+        console.error("Error fetching profile data:", error.message);
+      }
+    };
+    fetchSubscriptionData();
+     }, []);
+
+    useEffect(() => {
     const fetchTagData = async () => {
       try {
         let { data, error } = await supabase.from("tags").select("*");
@@ -214,7 +237,7 @@ export default function App() {
             <Stack.Screen name="SignIn">
               {(props) => <SignIn {...props} session={session} />}
             </Stack.Screen>
-            <Stack.Screen name="Profil" component={Account} />
+            <Stack.Screen name="Profile" component={Account} />
           </>
         ) : (
           <Stack.Screen name="MainApp">
@@ -229,7 +252,7 @@ export default function App() {
                       iconName = focused ? "map" : "map-outline";
                     } else if (route.name === "Discover") {
                       iconName = focused ? "search" : "search-outline";
-                    } else if (route.name === "Profil") {
+                    } else if (route.name === "Profile") {
                       iconName = focused ? "person" : "person-outline";
                     }
 
@@ -261,8 +284,31 @@ export default function App() {
                   )}
                 </Tab.Screen>
 
-                <Tab.Screen name="Profil">
-                  {(props) => <Account {...props} session={session} />}
+                <Tab.Screen name="Profile">
+                  {(props) => (
+                    <Stack.Navigator
+                      screenOptions={{
+                        headerShown: false,
+                      }}
+                    >
+                      <Stack.Screen name="Account">
+                        {(props) => (
+                          <Account
+                            {...props}
+                            session={session}
+                            subscriptions={subscriptions}
+                          />
+                        )}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="Subscriptions"
+                        component={Subscriptions}
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                    </Stack.Navigator>
+                  )}
                 </Tab.Screen>
               </Tab.Navigator>
             )}

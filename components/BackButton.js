@@ -13,7 +13,7 @@ const BackButton = () => {
   return (
     <View>
       <TouchableOpacity onPress={handleGoBack}>
-        <Ionicons name="arrow-back" size={30} color="#749F82" />
+        <Ionicons name="arrow-back" size={40} color="#749F82" />
       </TouchableOpacity>
     </View>
   );
