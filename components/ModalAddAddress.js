@@ -16,7 +16,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 export default function ModalAddAddress({ isModalVisible, toggleModal }) {
-  const apiGoogle = Constants.expoConfig.extra.apiGoogle;
+  const apiGoogle = Constants.manifest.extra.googleApiKey;
 
   const [inputSearch, setInputSearch] = useState("");
   const inputSearchRef = useRef();
@@ -73,7 +73,8 @@ export default function ModalAddAddress({ isModalVisible, toggleModal }) {
                   navigation.navigate("NewAddress", { data, details });
                 }}
                 query={{
-                  key: "AIzaSyCRYEssMuNLmqhUWyH4qZdFoK7KuWVRCrQ",
+                  // key: "AIzaSyCRYEssMuNLmqhUWyH4qZdFoK7KuWVRCrQ",
+                  key: apiGoogle,
                   // fields: "formatted_address,name,types", // Add types to the fields
                 }}
                 fetchDetails={true}

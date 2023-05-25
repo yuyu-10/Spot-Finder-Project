@@ -36,7 +36,8 @@ export default function Home({
 
   useEffect(() => {
     if (selectedAddress) {
-      const { latitude, longitude } = selectedAddress;
+      const { latitude, longitude } = selectedAddress.addresses;
+      console.log("selectedAddress", selectedAddress);
       setMapRegion({
         latitude,
         longitude,

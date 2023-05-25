@@ -28,14 +28,13 @@ export default function NewAddress({
   const [tagArray, setTagArray] = useState([]);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  // console.log("session", session);
-  // console.log("profile", profile);
-
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const { data, details } = route.params;
 
   const statusBarHeight = Constants.statusBarHeight;
+
+  const apiGoogle = Constants.manifest.extra.googleApiKey;
 
   const handleRegister = async () => {
     const dataRegister = {
@@ -240,7 +239,7 @@ export default function NewAddress({
                   <Image
                     key={photo.photo_reference}
                     source={{
-                      uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=AIzaSyCRYEssMuNLmqhUWyH4qZdFoK7KuWVRCrQ`,
+                      uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=${apiGoogle}`,
                     }}
                     style={{ width: "100%", height: 300 }}
                   />

@@ -46,10 +46,9 @@ export default function Subscriptions({ route }) {
                 <Text style={styles.title}>Followers</Text>
               </View>
               <View style={styles.subscribersNames}>
-                {followersNames.map((name, i) => (
-                  <View style={styles.subscribers}>
+                {followersNames.map((name) => (
+                  <View style={styles.subscribers} key={name[0].id}>
                     <Text
-                      key={i}
                       style={styles.subscribersNamesText}
                     >{`${name[0].first_name} ${name[0].last_name}`}</Text>
                     <Text styles={styles.subscribed}>Subscribed</Text>
@@ -63,10 +62,9 @@ export default function Subscriptions({ route }) {
                 <Text style={styles.title}>Followings</Text>
               </View>
               <View style={styles.subscribersNames}>
-                {followingsNames.map((name, i) => (
-                  <View style={styles.subscribers}>
+                {followingsNames.map((name) => (
+                  <View style={styles.subscribers} key={name[0].id}>
                     <Text
-                      key={i}
                       style={styles.subscribersNamesText}
                     >{`${name[0].first_name} ${name[0].last_name}`}</Text>
                     <Text styles={styles.subscribed}>Subscribed</Text>
@@ -154,8 +152,11 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "space-between",
   },
-  subscribersNamesText: {},
+  subscribersNamesText: {
+    color: "#425F57",
+    fontSize: 18,
+  },
   subscribed: {
-    color: "#A8E890",
+    color: "blue",
   },
 });
