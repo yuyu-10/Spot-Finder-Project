@@ -8,6 +8,7 @@ import {
   Switch,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { supabase } from "../lib/supabase";
 
 //import components
@@ -24,6 +25,7 @@ export default function NewAddress({
   tag,
   session,
   profile,
+  updateAddresses,
 }) {
   const [tagArray, setTagArray] = useState([]);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -35,6 +37,8 @@ export default function NewAddress({
   const statusBarHeight = Constants.statusBarHeight;
 
   const apiGoogle = Constants.manifest.extra.googleApiKey;
+
+  const navigation = useNavigation();
 
   const handleRegister = async () => {
     const dataRegister = {
@@ -82,6 +86,12 @@ export default function NewAddress({
       }
 
       console.log("Favorite successfully registered:", newFavorite);
+
+      // if (newFavorite) {
+      //   updateAddresses(newFavorite);
+      // }
+
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error);
     }

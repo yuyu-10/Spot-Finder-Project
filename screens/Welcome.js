@@ -5,33 +5,12 @@ import {
   TouchableHighlight,
   Image,
 } from "react-native";
-import { makeRedirectUri, startAsync } from "expo-auth-session";
-import { supabase, supabaseUrl } from "../lib/supabase";
 
 //import assets
 import IconMap from "../assets/images/iconMap.png";
+import GoogleButton from "../components/GoogleButton";
 
 export default function Welcome({ navigation }) {
-  const googleSignIn = async () => {
-    // const redirectUrl = makeRedirectUri({
-    //   path: "exp://192.168.5.149:19000/--/auth/callback",
-    // });
-    const redirectUrl = "exp://192.168.1.28:19000/--/auth/callback";
-
-    const authResponse = await startAsync({
-      // authUrl: `${supabaseUrl}/auth/v1/authorize?provider=google&redirect_to=${redirectUrl}`,
-      authUrl: `https://eijcgjlbfvtuubngtyle.supabase.co/auth/v1/authorize?provider=google&redirect_to=${redirectUrl}`,
-      returnUrl: redirectUrl,
-    });
-
-    if (authResponse.type === "success") {
-      supabase.auth.setSession({
-        access_token: authResponse.params.access_token,
-        refresh_token: authResponse.params.refresh_token,
-      });
-    }
-  };
-
   return (
     <View style={styles.homeContainer}>
       <Image source={IconMap} style={styles.logo} />
@@ -57,15 +36,7 @@ export default function Welcome({ navigation }) {
       >
         <Text style={styles.buttonSignIn}>Sign In</Text>
       </TouchableHighlight>
-      <TouchableHighlight
-        style={styles.buttonIn}
-        onPress={() => {
-          googleSignIn();
-        }}
-        underlayColor="#42855B"
-      >
-        <Text style={styles.buttonSignIn}>Sign in with Google</Text>
-      </TouchableHighlight>
+      <GoogleButton />
     </View>
   );
 }
