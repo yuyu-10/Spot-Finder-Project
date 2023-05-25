@@ -127,9 +127,12 @@ export default function App() {
   const [tag, setTag] = useState([]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    const fetchSession = async () => {
+      const currentSession = await supabase.auth.getSession();
+      setSession(currentSession);
+    };
+
+    fetchSession();
 
     const handleAuthStateChange = (event, session) => {
       setSession(session);
@@ -150,11 +153,11 @@ export default function App() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        if (session && session.user) {
+        if (session && session.user && session.user.id) {
           const { data, error } = await supabase
             .from("profiles")
             .select("*")
-            .eq("id", session.user.id);
+            .eq("id", session?.user?.id);
           if (error) {
             throw new Error(error.message);
           }
@@ -164,24 +167,34 @@ export default function App() {
         console.error("Error fetching profile data:", error.message);
       }
     };
-    fetchProfileData();
+    if (session) {
+      fetchProfileData();
+    }
   }, [session]);
 
   useEffect(() => {
     const fetchAddressData = async () => {
       try {
-        let { data, error } = await supabase.from("addresses").select("*");
-        if (error) {
-          throw new Error(error.message);
-        }
+        if (session && session.user && session.user.id) {
+          let { data, error } = await supabase
+            .from("favorites")
+            .select(`tags, addresses (*)`)
+            .eq("profiles_id", session?.user?.id);
 
-        setAddresses(data);
+          if (error) {
+            throw new Error(error.message);
+          }
+
+          setAddresses(data);
+        }
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
       }
     };
-    fetchAddressData();
-  }, []);
+    if (session) {
+      fetchAddressData();
+    }
+  }, [session]);
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
@@ -197,9 +210,9 @@ export default function App() {
       }
     };
     fetchSubscriptionData();
-     }, []);
+  }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchTagData = async () => {
       try {
         let { data, error } = await supabase.from("tags").select("*");

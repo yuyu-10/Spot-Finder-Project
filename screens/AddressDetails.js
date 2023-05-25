@@ -15,6 +15,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 
 import BackButton from "../components/BackButton";
+import TagIcon from "../components/TagIcon";
 
 export default function AddressDetails({
   route,
@@ -23,17 +24,44 @@ export default function AddressDetails({
   toggleMapVisibility,
 }) {
   const { address } = route.params;
-  // console.log(address);
 
   const windowWidth = Dimensions.get("window").width;
 
   const navigation = useNavigation();
 
   const handleAddressMapPress = (address) => {
+    console.log(address);
     navigation.navigate("Home", {
       selectedAddress: selectedAddress,
     });
     toggleMapVisibility();
+  };
+
+  const renderStars = (rating) => {
+    const filledStars = Math.floor(rating);
+    const halfStar = rating - filledStars >= 0.5;
+    const emptyStars = 5 - filledStars - (halfStar ? 1 : 0);
+
+    const stars = [];
+    for (let i = 0; i < filledStars; i++) {
+      stars.push(<Ionicons key={i} name="star" size={20} color="#FFD700" />);
+    }
+    if (halfStar) {
+      stars.push(
+        <Ionicons key="half" name="star-half" size={20} color="#FFD700" />
+      );
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <Ionicons
+          key={`empty_${i}`}
+          name="star-outline"
+          size={20}
+          color="#FFD700"
+        />
+      );
+    }
+    return stars;
   };
 
   return (
@@ -74,11 +102,22 @@ export default function AddressDetails({
             </View>
             <View>
               <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
-                {address.name}
+                {address.addresses.name}
               </Text>
             </View>
           </View>
           <View style={styles.addressInfosContainer}>
+            <View style={styles.tagContainer}>
+              {address.tags.map((tag) => {
+                return (
+                  <TagIcon
+                    key={tag.id}
+                    backgroundColor={tag.color}
+                    label={tag.name}
+                  />
+                );
+              })}
+            </View>
             <TouchableOpacity
               onPress={() => handleAddressMapPress(selectedAddress)}
             >
@@ -87,19 +126,13 @@ export default function AddressDetails({
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                {address.postal_address}
+                {address.addresses.postal_address}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.openingHours}>
-              Open Tue-Sat: 12h30-14h / 19h-23h
-            </Text>
+            <Text style={styles.telephone}>{address.addresses.phone}</Text>
             <Text style={styles.rating}>Rating: </Text>
             <View style={styles.starRating}>
-              <Ionicons name="star" size={25} color="#f5ca20" />
-              <Ionicons name="star" size={25} color="#f5ca20" />
-              <Ionicons name="star" size={25} color="#f5ca20" />
-              <Ionicons name="star" size={25} color="#f5ca20" />
-              <Ionicons name="star" size={25} color="#f5ca20" />
+              <Text>{renderStars(address.addresses.rating)}</Text>
             </View>
             <View style={styles.addReviewContainer}>
               <TextInput
@@ -169,7 +202,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingLeft: 5,
   },
-  openingHours: {
+  telephone: {
     fontSize: 13,
     color: "#425F57",
     marginBottom: 20,
@@ -202,5 +235,8 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 10,
     zIndex: 1,
+  },
+  tagContainer: {
+    width: "30%",
   },
 });

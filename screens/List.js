@@ -7,7 +7,7 @@ import {
   Image,
   ScrollView,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -15,7 +15,7 @@ export default function List({
   addresses,
   setSelectedAddress,
   toggleMapVisibility,
-  handleAddressPress
+  handleAddressPress,
 }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -38,7 +38,7 @@ export default function List({
       <ScrollView style={[styles.container, { backgroundColor: "#FFFAF0" }]}>
         {addresses ? (
           addresses.map((address, index) => (
-            <View key={address.id}>
+            <View key={address.addresses.id}>
               <View style={styles.addressContainer}>
                 <TouchableOpacity
                   onPress={() => handleImagePress(address.image)}
@@ -60,14 +60,14 @@ export default function List({
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {address.name}
+                      {address.addresses.name}
                     </Text>
                     <Text
                       style={styles.postalAddress}
                       numberOfLines={2}
                       ellipsizeMode="tail"
                     >
-                      {address.postal_address}
+                      {address.addresses.postal_address}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity

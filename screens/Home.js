@@ -28,7 +28,7 @@ export default function Home({
   isMapVisible,
   handleAddressPress,
   selectedAddress,
-  setSelectedAddress
+  setSelectedAddress,
 }) {
   const [mapRegion, setMapRegion] = useState(null);
   const [coords, setCoords] = useState();
@@ -71,6 +71,8 @@ export default function Home({
               Welcome, {`${profile[0].first_name} ${profile[0].last_name} `}!
             </Text>
 
+            {/* console.log("'sdfsdfvds", addresses[0].addresses.latitude); */}
+
             {isMapVisible ? (
               <>
                 <UserGeolocation coords={coords} setCoords={setCoords} />
@@ -78,22 +80,26 @@ export default function Home({
                   {addresses &&
                     addresses.map((marker) => {
                       return (
-                          <Marker
-                            key={marker.id}
-                            coordinate={{
-                              latitude: marker.latitude,
-                              longitude: marker.longitude,
-                            }}
-                            // title={marker.title}
-                            // description={marker.description}
-                            // image={require("../assets/images/marker.png")}
+                        <Marker
+                          key={marker.addresses.id}
+                          coordinate={{
+                            latitude: marker.addresses.latitude,
+                            longitude: marker.addresses.longitude,
+                          }}
+                          // title={marker.title}
+                          // description={marker.description}
+                          // image={require("../assets/images/marker.png")}
+                        >
+                          <TouchableHighlight
+                            onPress={() => handleAddressPress(marker)}
                           >
-                            <TouchableHighlight
-                              onPress={() => handleAddressPress(marker)}
-                            >
-                              <Ionicons name="location" size={30} color="#425F57" />
-                            </TouchableHighlight>
-                          </Marker>
+                            <Ionicons
+                              name="location"
+                              size={30}
+                              color="#425F57"
+                            />
+                          </TouchableHighlight>
+                        </Marker>
                       );
                     })}
                   {coords && (
