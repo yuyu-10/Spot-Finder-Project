@@ -316,8 +316,8 @@ export default function App() {
                       <Stack.Screen
                         name="Subscriptions"
                         component={Subscriptions}
-                        options={{
-                          headerShown: false,
+                        screenOptions={{
+                          headerShown: false
                         }}
                       />
                     </Stack.Navigator>
