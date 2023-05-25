@@ -9,25 +9,41 @@ import {
   TextInput,
   Platform,
   TouchableOpacity,
+  Switch,
+  Linking
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useEffect, useState } from "react";
 
 import BackButton from "../components/BackButton";
 import TagIcon from "../components/TagIcon";
+
+import Constants from "expo-constants";
 
 export default function AddressDetails({
   route,
   profile,
   selectedAddress,
   toggleMapVisibility,
+  toggleModal,
+  navigation: { goBack },
 }) {
   const { address } = route.params;
+  const apiGoogle = Constants.manifest.extra.googleApiKey;
+  const [isEnabled, setIsEnabled] = useState(address.addresses.tested);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const windowWidth = Dimensions.get("window").width;
 
   const navigation = useNavigation();
+
+  openWebsite = (website) => {
+    if (website) {
+      Linking.openURL(website);
+    }
+  };  
 
   const handleAddressMapPress = (address) => {
     navigation.navigate("Home", {
@@ -63,6 +79,7 @@ export default function AddressDetails({
     return stars;
   };
 
+  // console.log(address.addresses.pictures)
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -82,24 +99,23 @@ export default function AddressDetails({
             contentContainerStyle={styles.ScrollViewContent}
             horizontal={true}
           >
-              {/* {profile[0].pictures.map((photo) => {
-                return (
+            {address.addresses.pictures.map((photo) => (
+                <View>
                   <Image
-                    key={profile[0].pictures}
+                    key={photo}
                     source={{
-                      uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=AIzaSyCRYEssMuNLmqhUWyH4qZdFoK7KuWVRCrQ`,
+                      uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo}&key=${apiGoogle}`,
                     }}
-                    style={{ width: "100%", height: 300 }}
+                    style={{ width: 450, height: 250 }}
                   />
-                );
-              })} */}
+                </View>
+            ))}
           </ScrollView>
           <View style={styles.addressTitleContainer}>
             <View style={styles.backButtonView}>
               <TouchableOpacity
               style={styles.backHeader}
               onPress={() => {
-                toggleModal();
                 goBack();
               }}
             >
@@ -136,11 +152,47 @@ export default function AddressDetails({
                 {address.addresses.postal_address}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.telephone}>{address.addresses.phone}</Text>
+            <View style={styles.sep}></View>
+
+            <View style={styles.phoneContainer}>
+              <Text
+                style={{ fontWeight: "bold", color: "#749F82", fontSize: 16, padding: 15 }}
+              >
+                Phone:
+              </Text>
+              <Text style={styles.telephone}>{address.addresses.phone}</Text>
+            </View>
+            <View style={styles.sep}></View>
+          <View style={styles.ratingContainer}>
             <Text style={styles.rating}>Rating: </Text>
             <View style={styles.starRating}>
               <Text>{renderStars(address.addresses.rating)}</Text>
             </View>
+          </View>
+          <View style={styles.sep}></View>
+
+              <View style={styles.webContainer}>
+                <Text style={styles.web}>webSite: </Text>
+                <View style={styles.webSite}>
+                  <Text onPress={() => this.openWebsite(address.addresses.website)} style={{ fontSize: 13, color: "#425F57", textAlign: 'center'}}>{address.addresses.website ? address.addresses.website : "No website"}</Text>
+                </View>
+            </View>
+          <View style={styles.sep}></View>
+
+          <View style={{ flexDirection: "row", alignItems: "center", padding: 15}}>
+              <Switch
+                trackColor={{ false: "#425F57", true: "#CFFF8D" }}
+                thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+                ios_backgroundColor="#425F57"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+              <Text style={{ marginLeft: 10 }}>
+                {isEnabled ? "😍 Already tested" : "🤔 Try it"}
+              </Text>
+            </View>
+          <View style={styles.sep}></View>
+
             <View style={styles.addReviewContainer}>
               <TextInput
                 style={styles.input}
@@ -148,6 +200,7 @@ export default function AddressDetails({
                 placeholderTextColor="#9e9e9e"
               ></TextInput>
             </View>
+
           </View>
         </View>
       </View>
@@ -162,7 +215,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     marginTop: 50,
-    padding: 10,
+    padding: 15,
     backgroundColor: "#425F57",
     color: "#FFFAF0",
     textAlign: "center",
@@ -199,37 +252,54 @@ const styles = StyleSheet.create({
     marginLeft: 1,
     marginRight: 1,
   },
-  addressInfosContainer: {
-    height: 460,
-  },
+  // addressInfosContainer: {
+  //   height: 460,
+  // },
   postalAddress: {
     fontSize: 16,
+    padding: 15,
     color: "#425F57",
-    marginBottom: 8,
-    marginTop: 15,
-    paddingLeft: 5,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  phoneContainer: {
+    flexDirection: 'row',
   },
   telephone: {
     fontSize: 13,
     color: "#425F57",
-    marginBottom: 20,
-    paddingLeft: 5,
+    padding: 15,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
   },
   rating: {
     fontSize: 16,
-    color: "#425F57",
-    marginBottom: 5,
-    paddingLeft: 5,
+    color: "#749F82",
+    padding: 15,
+    fontWeight: 'bold'
   },
   starRating: {
     flexDirection: "row",
-    paddingLeft: 5,
-    marginBottom: 15,
+    padding: 15
+  },
+  webContainer: {
+    flexDirection: 'row',
+  },
+  web: {
+    fontWeight: "bold",
+    color: "#749F82",
+    fontSize: 16,
+    padding: 15
+  },
+  webSite: {
+    justifyContent: 'center',
+    width: '60%'
   },
   addReviewContainer: {
     height: 70,
     justifyContent: "topCenter",
-    padding: 10,
+    padding: 15,
   },
   input: {
     color: "#425F57",
@@ -243,12 +313,16 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   tagContainer: {
-    width: "30%",
+    padding: 15,
+    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
   },
   sep: {
     marginLeft: "auto",
     marginRight: "auto",
-    width: "100%",
+    width: "90%",
     borderWidth: 0.5,
     borderColor: "#d7d5d5",
   }

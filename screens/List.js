@@ -10,6 +10,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import TagIcon from "../components/TagIcon";
+
+import Constants from "expo-constants";
 
 export default function List({
   addresses,
@@ -18,6 +21,7 @@ export default function List({
   handleAddressPress,
 }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const apiGoogle = Constants.manifest.extra.googleApiKey;
 
   const handleImagePress = (image) => {
     setSelectedImage(image);
@@ -41,10 +45,12 @@ export default function List({
             <View key={address.addresses.id}>
               <View style={styles.addressContainer}>
                 <TouchableOpacity
-                  onPress={() => handleImagePress(address.image)}
+                  onPress={() => handleImagePress(address.addresses.pictures[0])}
                 >
                   <Image
-                    source={require("../assets/images/le_chateaubriand.jpeg")}
+                    source={{
+                      uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${address.addresses.pictures[0]}&key=${apiGoogle}`,
+                    }}
                     style={styles.image}
                   />
                 </TouchableOpacity>
@@ -73,6 +79,18 @@ export default function List({
                   <TouchableOpacity
                     onPress={() => handleAddressMapPress(address)}
                   >
+
+                  <View style={styles.tagContainer}>
+                        {address.tags.map((tag) => {
+                          return (
+                            <TagIcon
+                              key={tag.id}
+                              backgroundColor={tag.color}
+                              label={tag.name}
+                            />
+                          );
+                        })}
+                      </View>
                     <View style={styles.mapContainer}>
                       <Ionicons name="map-outline" style={styles.mapIcon} />
                       <Text style={styles.mapText}> See on Map</Text>
@@ -91,7 +109,7 @@ export default function List({
         <Modal visible={selectedImage !== null} onRequestClose={closeModal}>
           <View style={styles.modalContainer}>
             <Image
-              source={require("../assets/images/le_chateaubriand.jpeg")}
+              source={{uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${selectedImage}&key=${apiGoogle}`}}
               style={styles.modalImage}
             />
             <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
@@ -109,7 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    borderBottom: 1,
+    borderBottom: 1
   },
   addressContainer: {
     flexDirection: "row",
@@ -130,7 +148,13 @@ const styles = StyleSheet.create({
   postalAddress: {
     fontSize: 16,
     color: "#425F57",
-    marginBottom: 10,
+  },
+  tagContainer: {
+    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'start',
+    flexWrap: 'wrap',
+    marginBottom: 5
   },
   text: {
     fontSize: 20,
@@ -146,9 +170,11 @@ const styles = StyleSheet.create({
     borderWidth: 0.8,
   },
   line: {
-    width: "100%",
-    height: 1,
-    backgroundColor: "#425F57",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "95%",
+    borderWidth: 0.5,
+    borderColor: "#d7d5d5",
   },
   modalContainer: {
     flex: 1,
