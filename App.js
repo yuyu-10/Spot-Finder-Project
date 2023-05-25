@@ -27,7 +27,7 @@ import List from "./screens/List";
 import AddressDetails from "./screens/AddressDetails";
 import Subscriptions from "./screens/Subscriptions";
 
-function Map({ session, profile, addresses, tag }) {
+function Map({ session, profile, addresses, tag, setAddresses }) {
   const Stack = createNativeStackNavigator();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(true);
@@ -48,6 +48,10 @@ function Map({ session, profile, addresses, tag }) {
       address: address,
       selectedAddress: selectedAddress,
     });
+  };
+
+  const updateAddresses = (newAddress) => {
+    setAddresses((prevAddresses) => [...prevAddresses, newAddress]);
   };
 
   return (
@@ -85,6 +89,7 @@ function Map({ session, profile, addresses, tag }) {
             addresses={addresses}
             toggleModal={toggleModal}
             isModalVisible={isModalVisible}
+            updateAddresses={updateAddresses}
           />
         )}
       </Stack.Screen>
@@ -122,7 +127,7 @@ function Map({ session, profile, addresses, tag }) {
 export default function App() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState("");
-  const [addresses, setAddresses] = useState("");
+  const [addresses, setAddresses] = useState([]);
   const [subscriptions, setSubscriptions] = useState("");
   const [tag, setTag] = useState([]);
   const [currentUserId, setCurrentUserId] = useState("");

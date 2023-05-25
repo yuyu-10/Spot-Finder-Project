@@ -7,8 +7,10 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { supabase } from "../lib/supabase";
+
+//import packages
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 //import components & screen
 import InputStyle from "../components/InputStyle";
