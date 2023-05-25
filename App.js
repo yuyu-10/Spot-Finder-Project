@@ -125,6 +125,7 @@ export default function App() {
   const [addresses, setAddresses] = useState("");
   const [subscriptions, setSubscriptions] = useState("");
   const [tag, setTag] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState("");
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -179,7 +180,10 @@ export default function App() {
           let { data, error } = await supabase
             .from("favorites")
             .select(`tags, addresses (*)`)
-            .eq("profiles_id", session?.user?.id);
+            .eq(
+              "profiles_id",
+              currentUserId ? currentUserId : session?.user?.id
+            );
 
           if (error) {
             throw new Error(error.message);
@@ -194,7 +198,7 @@ export default function App() {
     if (session) {
       fetchAddressData();
     }
-  }, [session]);
+  }, [session, currentUserId]);
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
@@ -313,13 +317,14 @@ export default function App() {
                           />
                         )}
                       </Stack.Screen>
-                      <Stack.Screen
-                        name="Subscriptions"
-                        component={Subscriptions}
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
+                      <Stack.Screen name="Subscriptions">
+                        {(props) => (
+                          <Subscriptions
+                            {...props}
+                            setCurrentUserId={setCurrentUserId}
+                          />
+                        )}
+                      </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>

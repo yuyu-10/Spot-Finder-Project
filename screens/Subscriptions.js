@@ -7,15 +7,22 @@ import {
 } from "react-native";
 import { useState } from "react";
 import Constants from "expo-constants";
+import { useNavigation } from "@react-navigation/native";
 
 import BackButton from "../components/BackButton";
 
-export default function Subscriptions({ route }) {
+export default function Subscriptions({ route, setCurrentUserId }) {
   const { followersNames, followingsNames } = route.params;
 
   const statusBarHeight = Constants.statusBarHeight;
 
   const [followersOrFollowings, setFollowersOrFollowings] = useState(null);
+
+  const navigation = useNavigation();
+
+  function seeCurrentUserAddresses() {
+    navigation.navigate("Home");
+  }
 
   return (
     <>
@@ -54,12 +61,20 @@ export default function Subscriptions({ route }) {
               <ScrollView style={styles.subscribersNames}>
                 {followersNames.map((name) => (
                   <View style={styles.subscribers} key={name[0].id}>
-                    <Text
-                      style={styles.subscribersNamesText}
-                    >{`${name[0].first_name} ${name[0].last_name}`}</Text>
-                    <View style={styles.subscribedContainer}>
-                      <Text style={styles.subscribed}>Subscribed</Text>
-                    </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCurrentUserId(name[0].id);
+
+                        seeCurrentUserAddresses();
+                      }}
+                    >
+                      <Text
+                        style={styles.subscribersNamesText}
+                      >{`${name[0].first_name} ${name[0].last_name}`}</Text>
+                      <View style={styles.subscribedContainer}>
+                        <Text style={styles.subscribed}>Subscribed</Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
                 ))}
               </ScrollView>
@@ -72,12 +87,19 @@ export default function Subscriptions({ route }) {
               <ScrollView style={styles.subscribersNames}>
                 {followingsNames.map((name) => (
                   <View style={styles.subscribers} key={name[0].id}>
-                    <Text
-                      style={styles.subscribersNamesText}
-                    >{`${name[0].first_name} ${name[0].last_name}`}</Text>
-                    <View style={styles.subscribedContainer}>
-                      <Text style={styles.subscribed}>Subscribed</Text>
-                    </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCurrentUserId(name[0].id);
+                        seeCurrentUserAddresses();
+                      }}
+                    >
+                      <Text
+                        style={styles.subscribersNamesText}
+                      >{`${name[0].first_name} ${name[0].last_name}`}</Text>
+                      <View style={styles.subscribedContainer}>
+                        <Text style={styles.subscribed}>Subscribed</Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
                 ))}
               </ScrollView>
