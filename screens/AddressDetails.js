@@ -7,12 +7,12 @@ import {
   Image,
   Dimensions,
   TextInput,
-  KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import BackButton from "../components/BackButton";
 import TagIcon from "../components/TagIcon";
@@ -65,9 +65,9 @@ export default function AddressDetails({
   };
 
   return (
-    <KeyboardAvoidingView
+    <KeyboardAwareScrollView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.container}>
         <View>
@@ -83,22 +83,29 @@ export default function AddressDetails({
             contentContainerStyle={styles.ScrollViewContent}
             horizontal={true}
           >
-            <Image
-              source={require("../assets/images/le_chateaubriand.jpeg")}
-              style={[styles.image, { width: windowWidth }]}
-            />
-            <Image
-              source={require("../assets/images/le_chateaubriand.jpeg")}
-              style={[styles.image, { width: windowWidth }]}
-            />
-            <Image
-              source={require("../assets/images/le_chateaubriand.jpeg")}
-              style={[styles.image, { width: windowWidth }]}
-            />
+              {/* {profile[0].pictures.map((photo) => {
+                return (
+                  <Image
+                    key={profile[0].pictures}
+                    source={{
+                      uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=AIzaSyCRYEssMuNLmqhUWyH4qZdFoK7KuWVRCrQ`,
+                    }}
+                    style={{ width: "100%", height: 300 }}
+                  />
+                );
+              })} */}
           </ScrollView>
           <View style={styles.addressTitleContainer}>
             <View style={styles.backButtonView}>
-              <BackButton style={styles.backButton} />
+              <TouchableOpacity
+              style={styles.backHeader}
+              onPress={() => {
+                toggleModal();
+                goBack();
+              }}
+            >
+              <Ionicons name="arrow-back-outline" size={30} color="#425F57" />
+            </TouchableOpacity>
             </View>
             <View>
               <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
@@ -118,6 +125,7 @@ export default function AddressDetails({
                 );
               })}
             </View>
+            <View style={styles.sep}></View>
             <TouchableOpacity
               onPress={() => handleAddressMapPress(selectedAddress)}
             >
@@ -144,7 +152,7 @@ export default function AddressDetails({
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }
 
@@ -169,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingBottom: 20,
-    backgroundColor: "#FFF9DE",
+    backgroundColor: "#749F82",
     paddingTop: 20,
     borderBottomWidth: 1,
     flexDirection: "row",
@@ -178,7 +186,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#425F57",
+    color: "white",
   },
   imageContainer: {
     flex: 2,
@@ -193,7 +201,7 @@ const styles = StyleSheet.create({
     marginRight: 1,
   },
   addressInfosContainer: {
-    flex: 2,
+    height: 460,
   },
   postalAddress: {
     fontSize: 16,
@@ -221,7 +229,6 @@ const styles = StyleSheet.create({
   },
   addReviewContainer: {
     height: 70,
-
     justifyContent: "topCenter",
     padding: 10,
   },
@@ -239,4 +246,11 @@ const styles = StyleSheet.create({
   tagContainer: {
     width: "30%",
   },
+  sep: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "100%",
+    borderWidth: 0.5,
+    borderColor: "#d7d5d5",
+  }
 });
