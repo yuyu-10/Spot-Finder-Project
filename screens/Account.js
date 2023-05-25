@@ -13,12 +13,7 @@ import InputStyle from "../components/InputStyle";
 
 import { useNavigation } from "@react-navigation/native";
 
-export default function Account({
-  session,
-  subscriptions,
-  profile,
-  addresses,
-}) {
+export default function Account({ session, subscriptions }) {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -122,7 +117,7 @@ export default function Account({
           followersId.map(async (followerId) => {
             const { data, error } = await supabase
               .from("profiles")
-              .select("first_name, last_name")
+              .select("first_name, last_name, id")
               .eq("id", followerId);
 
             if (error) {
@@ -160,7 +155,7 @@ export default function Account({
           followingsId.map(async (followingId) => {
             const { data, error } = await supabase
               .from("profiles")
-              .select("first_name, last_name")
+              .select("first_name, last_name, id")
               .eq("id", followingId);
 
             if (error) {

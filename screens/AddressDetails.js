@@ -30,7 +30,6 @@ export default function AddressDetails({
   const navigation = useNavigation();
 
   const handleAddressMapPress = (address) => {
-    console.log(address);
     navigation.navigate("Home", {
       selectedAddress: selectedAddress,
     });
