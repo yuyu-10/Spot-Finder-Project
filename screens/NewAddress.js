@@ -265,7 +265,7 @@ export default function NewAddress({
         </View>
 
         <TouchableOpacity style={styles.footerButton} onPress={handleRegister}>
-          <Text>Register</Text>
+          <Text>Add spot</Text>
         </TouchableOpacity>
       </View>
     </View>

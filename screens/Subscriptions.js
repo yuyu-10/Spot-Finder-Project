@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useState } from "react";
 import Constants from "expo-constants";
 
@@ -45,32 +51,36 @@ export default function Subscriptions({ route }) {
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>Followers</Text>
               </View>
-              <View style={styles.subscribersNames}>
+              <ScrollView style={styles.subscribersNames}>
                 {followersNames.map((name) => (
                   <View style={styles.subscribers} key={name[0].id}>
                     <Text
                       style={styles.subscribersNamesText}
                     >{`${name[0].first_name} ${name[0].last_name}`}</Text>
-                    <Text styles={styles.subscribed}>Subscribed</Text>
+                    <View style={styles.subscribedContainer}>
+                      <Text style={styles.subscribed}>Subscribed</Text>
+                    </View>
                   </View>
                 ))}
-              </View>
+              </ScrollView>
             </View>
           ) : (
             <View style={styles.follow}>
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>Followings</Text>
               </View>
-              <View style={styles.subscribersNames}>
+              <ScrollView style={styles.subscribersNames}>
                 {followingsNames.map((name) => (
                   <View style={styles.subscribers} key={name[0].id}>
                     <Text
                       style={styles.subscribersNamesText}
                     >{`${name[0].first_name} ${name[0].last_name}`}</Text>
-                    <Text styles={styles.subscribed}>Subscribed</Text>
+                    <View style={styles.subscribedContainer}>
+                      <Text style={styles.subscribed}>Subscribed</Text>
+                    </View>
                   </View>
                 ))}
-              </View>
+              </ScrollView>
             </View>
           )}
         </View>
@@ -93,6 +103,8 @@ const styles = StyleSheet.create({
   },
   bannerText: {
     color: "#FFFAF0",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   backButtonView: {
     left: 10,
@@ -124,7 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFAF0",
     flex: 2,
     marginTop: -20,
-
+    borderBottomWidth: 2,
     borderRadius: 10,
     width: "100%",
   },
@@ -142,21 +154,30 @@ const styles = StyleSheet.create({
     color: "#CFFF8D",
   },
   subscribersNames: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderColor: "#CFFF8D",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   subscribers: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
     justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderColor: "#CFFF8D",
   },
   subscribersNamesText: {
     color: "#425F57",
     fontSize: 18,
   },
+  subscribedContainer: {
+    borderWidth: 2,
+    borderColor: "#A8E890",
+    padding: 5,
+    borderRadius: 5,
+  },
   subscribed: {
-    color: "blue",
+    color: "#A8E890",
+    fontSize: 18,
   },
 });
