@@ -1,5 +1,5 @@
 # Spot-Finder-Project
-Spot Finder est une application mobile développée en équipe de trois personnes dans le cadre de ma formation en développement de logiciels à Ada Tech School. Spot Finder a pour objectif de permettre aux utilisateurs d'ajouter leurs adresses préférées, qu'il s'agisse de restaurants, de bars, de musées, de galeries, et plus encore. Les utilisateurs pourront également suivre d'autres utilisateurs afin de découvrir de nouveaux lieux qu'ils apprécient.
+Spot Finder est une application mobile développée en équipe de trois personnes dans le cadre de ma formation en software developpement à Ada Tech School. Spot Finder a pour objectif de permettre aux utilisateurs d'ajouter leurs adresses préférées, qu'il s'agisse de restaurants, de bars, de musées, de galeries, et plus encore. Les utilisateurs pourront également suivre d'autres utilisateurs afin de découvrir de nouveaux lieux qu'ils apprécient.
 
 ## Fonctionnalités disponibles
 
